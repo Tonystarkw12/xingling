@@ -1,0 +1,189 @@
+{
+  "id": "2026-04-22-131453",
+  "generated_at": "2026-04-22T05:14:53.048200299Z",
+  "language": "zh",
+  "pages": [
+    {
+      "slug": "1-xiang-mu-gai-shu",
+      "title": "项目概述",
+      "file": "1-xiang-mu-gai-shu.md",
+      "section": "快速入门",
+      "level": "Beginner"
+    },
+    {
+      "slug": "2-kuai-su-kai-shi",
+      "title": "快速开始",
+      "file": "2-kuai-su-kai-shi.md",
+      "section": "快速入门",
+      "level": "Beginner"
+    },
+    {
+      "slug": "3-ji-zhu-zhan-zong-lan",
+      "title": "技术栈总览",
+      "file": "3-ji-zhu-zhan-zong-lan.md",
+      "section": "快速入门",
+      "level": "Beginner"
+    },
+    {
+      "slug": "4-xiang-mu-jie-gou-shuo-ming",
+      "title": "项目结构说明",
+      "file": "4-xiang-mu-jie-gou-shuo-ming.md",
+      "section": "快速入门",
+      "level": "Beginner"
+    },
+    {
+      "slug": "5-ying-yong-jia-gou-she-ji",
+      "title": "应用架构设计",
+      "file": "5-ying-yong-jia-gou-she-ji.md",
+      "section": "核心架构",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "6-lu-you-yu-ye-mian-dao-hang",
+      "title": "路由与页面导航",
+      "file": "6-lu-you-yu-ye-mian-dao-hang.md",
+      "section": "核心架构",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "7-zustand-zhuang-tai-guan-li",
+      "title": "Zustand 状态管理",
+      "file": "7-zustand-zhuang-tai-guan-li.md",
+      "section": "核心架构",
+      "group": "状态管理",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "8-yue-du-jin-du-chi-jiu-hua",
+      "title": "阅读进度持久化",
+      "file": "8-yue-du-jin-du-chi-jiu-hua.md",
+      "section": "核心架构",
+      "group": "状态管理",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "9-xiao-shuo-shu-ju-mo-xing",
+      "title": "小说数据模型",
+      "file": "9-xiao-shuo-shu-ju-mo-xing.md",
+      "section": "核心架构",
+      "group": "数据层",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "10-jiao-se-yu-shi-jie-guan-shu-ju",
+      "title": "角色与世界观数据",
+      "file": "10-jiao-se-yu-shi-jie-guan-shu-ju.md",
+      "section": "核心架构",
+      "group": "数据层",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "11-markdown-jie-xi-jiao-ben",
+      "title": "Markdown 解析脚本",
+      "file": "11-markdown-jie-xi-jiao-ben.md",
+      "section": "核心架构",
+      "group": "数据层",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "12-shou-ye-yu-dao-hang",
+      "title": "首页与导航",
+      "file": "12-shou-ye-yu-dao-hang.md",
+      "section": "页面与组件",
+      "group": "页面组件",
+      "level": "Beginner"
+    },
+    {
+      "slug": "13-juan-xuan-ze-qi",
+      "title": "卷选择器",
+      "file": "13-juan-xuan-ze-qi.md",
+      "section": "页面与组件",
+      "group": "页面组件",
+      "level": "Beginner"
+    },
+    {
+      "slug": "14-zhang-jie-yue-du-qi",
+      "title": "章节阅读器",
+      "file": "14-zhang-jie-yue-du-qi.md",
+      "section": "页面与组件",
+      "group": "页面组件",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "15-ren-wu-tu-jian",
+      "title": "人物图鉴",
+      "file": "15-ren-wu-tu-jian.md",
+      "section": "页面与组件",
+      "group": "页面组件",
+      "level": "Beginner"
+    },
+    {
+      "slug": "16-shi-jie-guan-liu-lan",
+      "title": "世界观浏览",
+      "file": "16-shi-jie-guan-liu-lan.md",
+      "section": "页面与组件",
+      "group": "页面组件",
+      "level": "Beginner"
+    },
+    {
+      "slug": "17-shi-jian-xian",
+      "title": "时间线",
+      "file": "17-shi-jian-xian.md",
+      "section": "页面与组件",
+      "group": "页面组件",
+      "level": "Beginner"
+    },
+    {
+      "slug": "18-xing-kong-bei-jing-dong-hua",
+      "title": "星空背景动画",
+      "file": "18-xing-kong-bei-jing-dong-hua.md",
+      "section": "页面与组件",
+      "group": "视觉与动效",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "19-framer-motion-dong-hua-xi-tong",
+      "title": "Framer Motion 动画系统",
+      "file": "19-framer-motion-dong-hua-xi-tong.md",
+      "section": "页面与组件",
+      "group": "视觉与动效",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "20-zhu-ti-yu-yang-shi-xi-tong",
+      "title": "主题与样式系统",
+      "file": "20-zhu-ti-yu-yang-shi-xi-tong.md",
+      "section": "页面与组件",
+      "group": "视觉与动效",
+      "level": "Beginner"
+    },
+    {
+      "slug": "21-vite-gou-jian-pei-zhi",
+      "title": "Vite 构建配置",
+      "file": "21-vite-gou-jian-pei-zhi.md",
+      "section": "开发与构建",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "22-typescript-pei-zhi",
+      "title": "TypeScript 配置",
+      "file": "22-typescript-pei-zhi.md",
+      "section": "开发与构建",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "23-eslint-dai-ma-gui-fan",
+      "title": "ESLint 代码规范",
+      "file": "23-eslint-dai-ma-gui-fan.md",
+      "section": "开发与构建",
+      "level": "Intermediate"
+    },
+    {
+      "slug": "24-kai-fa-gong-zuo-liu",
+      "title": "开发工作流",
+      "file": "24-kai-fa-gong-zuo-liu.md",
+      "section": "开发与构建",
+      "level": "Beginner"
+    }
+  ]
+}

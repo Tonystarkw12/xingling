@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cosmic-900: #0a0e27;
+  --color-cosmic-800: #0f1535;
+  --color-cosmic-700: #1a1f4e;
+  --color-cosmic-600: #252b6e;
+  --color-cosmic-500: #3b3f8e;
+  --color-nebula-500: #8b5cf6;
+  --color-nebula-400: #a78bfa;
+  --color-nebula-300: #c4b5fd;
+  --color-star-500: #60a5fa;
+  --color-star-400: #93c5fd;
+  --color-star-300: #bfdbfe;
+  --color-aurora-500: #34d399;
+  --color-aurora-400: #6ee7b7;
+  --color-text-primary: #e2e8f0;
+  --color-text-secondary: #94a3b8;
+  --color-bilibili-500: #00a1d6;
+  --color-bilibili-400: #20b0e1;
+  --color-bilibili-300: #5ccde8;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", "SimSun", serif;
+  background: #0a0e27;
+  color: #e2e8f0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.6); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-twinkle { animation: twinkle 3s ease-in-out infinite; }
+.animate-float { animation: float 4s ease-in-out infinite; }
+.animate-glow { animation: glow-pulse 2s ease-in-out infinite; }
+.animate-slide-up { animation: slide-up 0.6s ease-out forwards; }
+.animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0a0e27; }
+::-webkit-scrollbar-thumb { background: #3b3f8e; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #8b5cf6; }

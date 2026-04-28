@@ -1,0 +1,16 @@
+[Unit]
+Description=Xingling Novel Web Server
+After=network.target
+
+[Service]
+Type=simple
+User=tony
+WorkingDirectory=/home/tony/xingling/xingling-web
+ExecStart=/usr/bin/env node /home/tony/xingling/xingling-web/node_modules/vite/bin/vite.js preview --host 0.0.0.0 --port 5178
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+Environment=HOME=/home/tony
+
+[Install]
+WantedBy=multi-user.target
