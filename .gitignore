@@ -1,1 +1,9 @@
 .gitnexus
+
+# === Environment (added by batch) ===
+.env
+.env.local
+.env.*.local
+
+node_modules/
+dist/

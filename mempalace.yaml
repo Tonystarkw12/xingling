@@ -1,0 +1,30 @@
+wing: xingling
+rooms:
+- name: xingling_web
+  description: Files from xingling-web/
+  keywords:
+  - xingling_web
+  - xingling-web
+- name: plans
+  description: Files from Plans/
+  keywords:
+  - plans
+  - plans
+- name: scripts
+  description: Files from scripts/
+  keywords:
+  - scripts
+  - scripts
+- name: documentation
+  description: Files from wiki/
+  keywords:
+  - documentation
+  - wiki
+- name: planning
+  description: Files from specs/
+  keywords:
+  - planning
+  - specs
+- name: general
+  description: Files that don't fit other rooms
+  keywords: []

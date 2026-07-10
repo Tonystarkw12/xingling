@@ -1,62 +1,91 @@
-<!-- gitnexus:start -->
-# GitNexus MCP
+# 星灵 (Xingling) — Project Context
 
-This project is indexed by GitNexus as **xingling** (17 symbols, 18 relationships, 0 execution flows).
+## Overview
 
-GitNexus provides a knowledge graph over this codebase — call chains, blast radius, execution flows, and semantic search.
+星灵是一个创意写作 + 交互式小说网站项目。核心内容是一部中文科幻/奇幻长篇小说《星灵》（16卷、~200章、6500+行），围绕星灵种族、星之键、圣皇战争等宏大世界观展开。项目目标是将小说呈现为沉浸式视觉小说/网页游戏体验。
 
-## Always Start Here
+## Repository Structure
 
-For any task involving code understanding, debugging, impact analysis, or refactoring, you must:
-
-1. **Read `gitnexus://repo/{name}/context`** — codebase overview + check index freshness
-2. **Match your task to a skill below** and **read that skill file**
-3. **Follow the skill's workflow and checklist**
-
-> If step 1 warns the index is stale, run `npx gitnexus analyze` in the terminal first.
-
-## Skills
-
-| Task | Read this skill file |
-|------|---------------------|
-| Understand architecture / "How does X work?" | `.claude/skills/gitnexus/exploring/SKILL.md` |
-| Blast radius / "What breaks if I change X?" | `.claude/skills/gitnexus/impact-analysis/SKILL.md` |
-| Trace bugs / "Why is X failing?" | `.claude/skills/gitnexus/debugging/SKILL.md` |
-| Rename / extract / split / refactor | `.claude/skills/gitnexus/refactoring/SKILL.md` |
-
-## Tools Reference
-
-| Tool | What it gives you |
-|------|-------------------|
-| `query` | Process-grouped code intelligence — execution flows related to a concept |
-| `context` | 360-degree symbol view — categorized refs, processes it participates in |
-| `impact` | Symbol blast radius — what breaks at depth 1/2/3 with confidence |
-| `detect_changes` | Git-diff impact — what do your current changes affect |
-| `rename` | Multi-file coordinated rename with confidence-tagged edits |
-| `cypher` | Raw graph queries (read `gitnexus://repo/{name}/schema` first) |
-| `list_repos` | Discover indexed repos |
-
-## Resources Reference
-
-Lightweight reads (~100-500 tokens) for navigation:
-
-| Resource | Content |
-|----------|---------|
-| `gitnexus://repo/{name}/context` | Stats, staleness check |
-| `gitnexus://repo/{name}/clusters` | All functional areas with cohesion scores |
-| `gitnexus://repo/{name}/cluster/{clusterName}` | Area members |
-| `gitnexus://repo/{name}/processes` | All execution flows |
-| `gitnexus://repo/{name}/process/{processName}` | Step-by-step trace |
-| `gitnexus://repo/{name}/schema` | Graph schema for Cypher |
-
-## Graph Schema
-
-**Nodes:** File, Function, Class, Interface, Method, Community, Process
-**Edges (via CodeRelation.type):** CALLS, IMPORTS, EXTENDS, IMPLEMENTS, DEFINES, MEMBER_OF, STEP_IN_PROCESS
-
-```cypher
-MATCH (caller)-[:CodeRelation {type: 'CALLS'}]->(f:Function {name: "myFunc"})
-RETURN caller.name, caller.filePath
+```
+xingling/
+├── 星灵.md              # 主小说全文（第一卷 自行始终，6500+行）
+├── 境界彼方.md           # 前传/外传小说（第一卷 境界彼方）
+├── 企划.md              # 项目企划文档
+├── entities.md / entities.json  # 角色/实体定义
+├── mempalace.yaml       # 记忆宫殿配置（用于内容组织）
+├── 评分报告_星灵.md      # 小说评分报告
+│
+├── novels/              # 短篇小说集 + 评分报告
+│   ├── 境界彼方.md / 境界彼方（改进版）.md
+│   ├── 卢米诺斯.md / 烬火与霓虹.md / 坠日之后.md / ...
+│   ├── Plans/           # 小说相关计划
+│   └── 评分报告_*.md    # 各篇评分
+│
+├── xingling-web/        # React SPA — 小说网页展示
+│   ├── src/
+│   │   ├── components/  # UI 组件
+│   │   ├── data/        # 解析后的小说数据、角色、世界观
+│   │   ├── store/       # Zustand 状态管理
+│   │   ├── styles/      # 样式文件
+│   │   └── scripts/     # 构建脚本（parse-novel.ts 等）
+│   └── package.json     # React 19 + Vite 8 + Tailwind 4 + Framer Motion + Zustand
+│
+├── xingling-game/       # Phaser 游戏
+│   ├── src/
+│   │   ├── scenes/      # 游戏场景
+│   │   ├── ui/          # UI 组件
+│   │   ├── data/        # 游戏数据
+│   │   └── main.ts      # 入口
+│   └── package.json     # Phaser 3.90 + Vite 6 + Tailwind 3 + TypeScript
+│
+└── Plans/               # 实现计划文档
 ```
 
-<!-- gitnexus:end -->
+## Tech Stack
+
+### xingling-web（主站）
+- **Runtime:** React 19 + TypeScript 6
+- **Build:** Vite 8
+- **Styling:** Tailwind CSS 4
+- **Animation:** Framer Motion
+- **State:** Zustand
+- **Routing:** React Router 7
+- **Icons:** Lucide React
+- **Dev commands:**
+  - `npm run dev` — 启动开发服务器
+  - `npm run build` — 构建（tsc + vite build）
+  - `npm run lint` — ESLint 检查
+  - `npm run parse` — 解析小说 Markdown（tsx scripts/parse-novel.ts）
+
+### xingling-game（游戏）
+- **Engine:** Phaser 3.90
+- **Build:** Vite 6
+- **Styling:** Tailwind CSS 3
+- **Language:** TypeScript 5.8
+- **Dev commands:**
+  - `npm run dev` — 启动开发服务器
+  - `npm run build` — 构建
+
+## Conventions
+
+- 项目语言为中文，代码注释和 commit message 使用中文或英文均可
+- 小说内容以 Markdown 格式存储，通过构建脚本解析为结构化数据
+- 两个子项目各自独立管理依赖（各自的 node_modules）
+- xingling-web 使用 `npm`，xingling-game 使用 `bun`
+
+## Key Domain Concepts
+
+- **星灵纪元** — 小说世界的时间纪年系统
+- **星之键** — 传说中的神器，核心剧情线索
+- **权能** — 星灵的特殊能力体系（电磁系、空间系、绝对零度等）
+- **拉提麦尔星系** — 故事主要发生的星系
+- **艾尔登超星系团** — 更大的宇宙结构
+- **ALE崩坏病** — 世界中的疾病设定
+- **紫晶** — 关键资源/能源
+- **灵武** — 星灵的武器
+
+## Git Workflow
+
+- 当前分支：master
+- 大量文件尚未跟踪（novels/、xingling-game/、xingling-web/ 等均为 untracked）
+- 初始 commit：`eaa854a Initial commit`

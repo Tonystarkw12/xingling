@@ -1,0 +1,12 @@
+{
+  "screenSize": {
+    "width": { "value": 1152, "type": "number" },
+    "height": { "value": 768, "type": "number" }
+  },
+  "debugConfig": {
+    "debug": { "value": false, "type": "boolean" }
+  },
+  "renderConfig": {
+    "pixelArt": { "value": false, "type": "boolean" }
+  }
+}
