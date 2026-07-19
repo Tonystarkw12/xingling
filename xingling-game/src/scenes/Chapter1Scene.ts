@@ -99,6 +99,8 @@ export class Chapter1Scene extends BaseChapterScene {
   }
 
   protected initializeScene(): void {
+    this.sound.stopAll();
+    this.sound.removeAll();
     // Play story BGM
     if (this.cache.audio.exists('bgm_episode1')) {
       this.sound.add('bgm_episode1', { loop: true, volume: 0.5 }).play();

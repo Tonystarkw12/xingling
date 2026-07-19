@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { Card } from '../ui/Card';
-import { type CardData, createStarterDeck } from '../data/CardDatabase';
+import { type BattleForm, type CardData, createDeckForForm } from '../data/CardDatabase';
 
 /**
  * Battle Scene - Enhanced with visual effects and animations
@@ -12,12 +12,18 @@ export class BattleScene extends Phaser.Scene {
   private playerBlock: number = 0;
   private playerEnergy: number = 3;
   private playerMaxEnergy: number = 3;
+  private playerForm: BattleForm = 'BSE';
+  private starEnergy: number = 0;
+  private readonly maxStarEnergy: number = 30;
+  private starTurnsRemaining: number = 0;
+  private readonly aleTurnDamage: number = 5;
 
   // Enemy state
   private enemyMaxHP: number = 40;
   private enemyHP: number = 40;
   private enemyBlock: number = 0;
   private enemyIntentText?: Phaser.GameObjects.Text;
+  private enemyWillAttack: boolean = true;
 
   // Deck state
   private deck: CardData[] = [];
@@ -33,17 +39,23 @@ export class BattleScene extends Phaser.Scene {
   private blockText!: Phaser.GameObjects.Text;
   private enemyBlockText!: Phaser.GameObjects.Text;
   private energyText!: Phaser.GameObjects.Text;
+  private starBar!: Phaser.GameObjects.Graphics;
+  private starText!: Phaser.GameObjects.Text;
+  private formText!: Phaser.GameObjects.Text;
+  private formButton!: Phaser.GameObjects.Rectangle;
   private deckCountText!: Phaser.GameObjects.Text;
   private discardCountText!: Phaser.GameObjects.Text;
 
   // Character sprites
   private playerSprite?: Phaser.GameObjects.Image;
   private enemySprite?: Phaser.GameObjects.Rectangle;
+  private formParticles?: Phaser.GameObjects.Particles.ParticleEmitter;
 
   // Turn state
   private isPlayerTurn: boolean = true;
   private turnNumber: number = 1;
   private isAnimating: boolean = false;
+  private switchedFormThisTurn: boolean = false;
 
   constructor() {
     super({ key: 'BattleScene' });
@@ -51,11 +63,16 @@ export class BattleScene extends Phaser.Scene {
 
   create(): void {
     const cam = this.cameras.main;
+    this.sound.stopAll();
+    this.sound.removeAll();
 
     // Reset state
     this.playerHP = this.playerMaxHP;
     this.playerBlock = 0;
     this.playerEnergy = this.playerMaxEnergy;
+    this.playerForm = 'BSE';
+    this.starEnergy = 0;
+    this.starTurnsRemaining = 0;
     this.enemyHP = this.enemyMaxHP;
     this.enemyBlock = 0;
     this.hand = [];
@@ -64,10 +81,12 @@ export class BattleScene extends Phaser.Scene {
     this.isPlayerTurn = true;
     this.turnNumber = 1;
     this.isAnimating = false;
+    this.switchedFormThisTurn = false;
 
-    this.deck = this.shuffle(createStarterDeck());
+    this.deck = this.shuffle(createDeckForForm(this.playerForm));
 
     this.createBackground(cam);
+    this.createParticleTexture();
     this.createBattleArena(cam);
     this.createUI(cam);
     this.drawCards(5);
@@ -110,6 +129,16 @@ export class BattleScene extends Phaser.Scene {
     if (this.cache.audio.exists('bgm_acestep')) {
       this.sound.play('bgm_acestep', { loop: true, volume: 0.4 });
     }
+  }
+
+  private createParticleTexture(): void {
+    if (this.textures.exists('form_particle')) return;
+
+    const texture = this.make.graphics({ x: 0, y: 0 }, false);
+    texture.fillStyle(0xffffff, 1);
+    texture.fillCircle(4, 4, 4);
+    texture.generateTexture('form_particle', 8, 8);
+    texture.destroy();
   }
 
   private createBattleArena(cam: Phaser.Cameras.Scene2D.Camera): void {
@@ -196,6 +225,22 @@ export class BattleScene extends Phaser.Scene {
       fontStyle: 'bold',
     }).setOrigin(0.5);
 
+    this.formButton = this.add.rectangle(80, cam.height - 45, 130, 34, 0x334155)
+      .setStrokeStyle(2, 0x94a3b8)
+      .setInteractive({ useHandCursor: true });
+    this.formText = this.add.text(80, cam.height - 45, '', {
+      fontSize: '14px',
+      color: '#ffffff',
+      fontStyle: 'bold',
+    }).setOrigin(0.5);
+    this.formButton.on('pointerdown', () => this.handleFormButton());
+
+    this.starBar = this.add.graphics();
+    this.starText = this.add.text(180, cam.height - 76, '', {
+      fontSize: '13px',
+      color: '#fde047',
+    }).setOrigin(0.5);
+
     const endTurnBtn = this.add.rectangle(cam.width - 100, cam.height - 100, 120, 50, 0x4338ca);
     endTurnBtn.setStrokeStyle(2, 0x6366f1);
     endTurnBtn.setInteractive({ useHandCursor: true });
@@ -262,8 +307,98 @@ export class BattleScene extends Phaser.Scene {
     this.enemyBlockText.setText(this.enemyBlock > 0 ? `🛡${this.enemyBlock}` : '');
 
     this.energyText.setText(`${this.playerEnergy}/${this.playerMaxEnergy}`);
+    this.formText.setText(this.playerForm === 'STAR' ? `星化 ${this.starTurnsRemaining}回合` : `${this.playerForm} · 切换`);
+    this.formButton.setFillStyle(this.playerForm === 'BSE' ? 0x334155 : this.playerForm === 'ALE' ? 0x9d174d : 0x854d0e);
+
+    const starX = 125;
+    const starY = cam.height - 102;
+    const starWidth = 110;
+    this.starBar.clear();
+    this.starBar.fillStyle(0x1e293b);
+    this.starBar.fillRect(starX, starY, starWidth, 12);
+    this.starBar.fillStyle(0xfde047);
+    this.starBar.fillRect(starX, starY, (this.starEnergy / this.maxStarEnergy) * starWidth, 12);
+    this.starText.setText(`星化 ${this.starEnergy}/${this.maxStarEnergy}`);
     this.deckCountText.setText(`牌堆: ${this.deck.length}`);
     this.discardCountText.setText(`弃牌: ${this.discardPile.length}`);
+  }
+
+  private handleFormButton(): void {
+    if (!this.isPlayerTurn || this.isAnimating || this.playerForm === 'STAR' || this.switchedFormThisTurn) return;
+
+    if (this.starEnergy >= this.maxStarEnergy) {
+      this.starTurnsRemaining = 3;
+      this.starEnergy = 0;
+      this.switchForm('STAR');
+    } else {
+      this.switchForm(this.playerForm === 'BSE' ? 'ALE' : 'BSE');
+    }
+
+    this.switchedFormThisTurn = true;
+    this.updateUI();
+  }
+
+  private switchForm(form: BattleForm): void {
+    this.playerForm = form;
+    this.deck = this.shuffle(createDeckForForm(form));
+    this.discardPile = [];
+    this.hand = [];
+    this.handCards.forEach((card) => card.destroy());
+    this.handCards = [];
+    this.drawCards(5);
+
+    if (this.playerSprite) {
+      this.playerSprite.clearTint();
+      if (form === 'ALE') this.playerSprite.setTint(0xec4899);
+      if (form === 'STAR') this.playerSprite.setTint(0xfde047);
+    }
+
+    this.updateFormEffects(form);
+    this.flashScreen(form === 'BSE' ? 0x64748b : form === 'STAR' ? 0xfde047 : 0xec4899, 0.25, 300);
+  }
+
+  private updateFormEffects(form: BattleForm): void {
+    this.formParticles?.destroy();
+    this.formParticles = undefined;
+
+    if (this.playerSprite?.postFX) {
+      this.playerSprite.postFX.clear();
+    }
+    if (form === 'BSE' || !this.playerSprite) return;
+
+    const color = form === 'ALE' ? 0xec4899 : 0xfde047;
+    this.formParticles = this.add.particles(this.playerSprite.x, this.playerSprite.y - 30, 'form_particle', {
+      speed: form === 'ALE' ? { min: 20, max: 55 } : { min: 35, max: 90 },
+      angle: form === 'ALE' ? { min: 240, max: 300 } : { min: 0, max: 360 },
+      lifespan: { min: 500, max: 1100 },
+      quantity: form === 'ALE' ? 1 : 2,
+      frequency: form === 'ALE' ? 90 : 55,
+      scale: { start: form === 'ALE' ? 0.8 : 1.2, end: 0 },
+      alpha: { start: 0.9, end: 0 },
+      tint: color,
+      blendMode: Phaser.BlendModes.ADD,
+      emitting: true,
+    }).setDepth(this.playerSprite.depth + 1);
+
+    if (this.game.renderer.type === Phaser.WEBGL && this.playerSprite.postFX) {
+      this.playerSprite.postFX.addBloom(color, form === 'ALE' ? 1 : 2, form === 'ALE' ? 1 : 2, form === 'ALE' ? 1.2 : 2, 1);
+      const matrix = this.playerSprite.postFX.addColorMatrix();
+      if (form === 'ALE') matrix.hue(25);
+      else matrix.brightness(1.35);
+      this.playerSprite.postFX.addVignette(0.5, 0.5, form === 'ALE' ? 0.7 : 0.9, form === 'ALE' ? 0.35 : 0.15);
+    }
+
+    const pulse = this.add.circle(this.playerSprite.x, this.playerSprite.y - 30, 45, color, 0)
+      .setStrokeStyle(form === 'ALE' ? 2 : 4, color, 0.9)
+      .setBlendMode(Phaser.BlendModes.ADD);
+    this.tweens.add({
+      targets: pulse,
+      scale: form === 'ALE' ? 1.8 : 2.6,
+      alpha: 0,
+      duration: form === 'ALE' ? 700 : 1000,
+      repeat: form === 'ALE' ? 1 : 2,
+      onComplete: () => pulse.destroy(),
+    });
   }
 
   private drawCards(count: number): void {
@@ -350,7 +485,7 @@ export class BattleScene extends Phaser.Scene {
       // Attack effect
       this.createAttackEffect(cam.width * 0.75, cam.height * 0.45, cardData.artColor);
 
-      let damage = cardData.damage;
+      let damage = Math.round(cardData.damage * (this.playerForm === 'BSE' ? 1 : this.playerForm === 'ALE' ? 1.5 : 2));
       if (this.enemyBlock > 0) {
         const absorbed = Math.min(this.enemyBlock, damage);
         this.enemyBlock -= absorbed;
@@ -360,6 +495,9 @@ export class BattleScene extends Phaser.Scene {
         }
       }
       this.enemyHP = Math.max(0, this.enemyHP - damage);
+      if (this.playerForm === 'ALE') {
+        this.starEnergy = Math.min(this.maxStarEnergy, this.starEnergy + damage);
+      }
 
       if (damage > 0) {
         this.showFloatingText(`-${damage}`, cam.width * 0.75, cam.height * 0.4, '#ef4444', 32);
@@ -463,6 +601,8 @@ export class BattleScene extends Phaser.Scene {
       sprite.setTint(color);
       this.time.delayedCall(duration, () => {
         sprite.clearTint();
+        if (sprite === this.playerSprite && this.playerForm === 'ALE') sprite.setTint(0xec4899);
+        if (sprite === this.playerSprite && this.playerForm === 'STAR') sprite.setTint(0xfde047);
       });
     } else {
       // Rectangle - flash fill color
@@ -506,7 +646,7 @@ export class BattleScene extends Phaser.Scene {
 
   private enemyTurn(): void {
     const cam = this.cameras.main;
-    const action = Math.random();
+    const action = this.enemyWillAttack ? 0 : 1;
 
     if (action < 0.7) {
       // Enemy attack
@@ -528,7 +668,7 @@ export class BattleScene extends Phaser.Scene {
       this.time.delayedCall(400, () => {
         this.createAttackEffect(cam.width * 0.25, cam.height * 0.45, 0xef4444);
 
-        let actualDamage = damage;
+        let actualDamage = this.playerForm === 'STAR' ? 0 : damage;
         if (this.playerBlock > 0) {
           const absorbed = Math.min(this.playerBlock, actualDamage);
           this.playerBlock -= absorbed;
@@ -567,10 +707,27 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private startNewTurn(): void {
+    if (this.playerForm === 'ALE') {
+      this.playerHP = Math.max(0, this.playerHP - this.aleTurnDamage);
+      this.showFloatingText(`ALE -${this.aleTurnDamage}❤`, this.cameras.main.width * 0.25, this.cameras.main.height * 0.4, '#ec4899');
+    } else if (this.playerForm === 'STAR') {
+      this.starTurnsRemaining--;
+      if (this.starTurnsRemaining <= 0) {
+        this.playerHP = 0;
+      }
+    }
+
+    if (this.playerHP <= 0) {
+      this.updateUI();
+      this.time.delayedCall(500, () => this.defeat());
+      return;
+    }
+
     this.turnNumber++;
     this.playerEnergy = this.playerMaxEnergy;
     this.playerBlock = 0;
     this.isPlayerTurn = true;
+    this.switchedFormThisTurn = false;
 
     // Turn start flash
     this.flashScreen(0xffffff, 0.2, 300);
@@ -581,7 +738,8 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private setEnemyIntent(): void {
-    const action = Math.random() < 0.7 ? '⚔攻击' : '🛡防御';
+    this.enemyWillAttack = Math.random() < 0.7;
+    const action = this.enemyWillAttack ? '⚔攻击' : '🛡防御';
     if (this.enemyIntentText) {
       this.enemyIntentText.setText(action);
     }
@@ -657,7 +815,7 @@ export class BattleScene extends Phaser.Scene {
         }).setOrigin(0.5).setDepth(1000);
 
         this.input.once('pointerdown', () => {
-          this.scene.start('Chapter1Scene');
+          this.scene.start('ChapterCompleteScene');
         });
       },
     });
