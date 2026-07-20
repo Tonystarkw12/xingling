@@ -4,6 +4,7 @@ interface DemoSave {
   version: 1;
   checkpoint: DemoCheckpoint;
   tutorialSeen: boolean;
+  battleTutorialSeen: boolean;
   updatedAt: string;
 }
 
@@ -13,6 +14,7 @@ const DEFAULT_SAVE: DemoSave = {
   version: 1,
   checkpoint: 'chapter1',
   tutorialSeen: false,
+  battleTutorialSeen: false,
   updatedAt: '',
 };
 
@@ -28,6 +30,7 @@ export function loadSave(): DemoSave {
       version: 1,
       checkpoint: parsed.checkpoint as DemoCheckpoint,
       tutorialSeen: parsed.tutorialSeen === true,
+      battleTutorialSeen: parsed.battleTutorialSeen === true,
       updatedAt: typeof parsed.updatedAt === 'string' ? parsed.updatedAt : '',
     };
   } catch {
@@ -57,6 +60,15 @@ export function markTutorialSeen(): void {
   writeSave({
     ...current,
     tutorialSeen: true,
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+export function markBattleTutorialSeen(): void {
+  const current = loadSave();
+  writeSave({
+    ...current,
+    battleTutorialSeen: true,
     updatedAt: new Date().toISOString(),
   });
 }

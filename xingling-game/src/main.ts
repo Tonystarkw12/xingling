@@ -5,7 +5,7 @@ import './styles/tailwind.css';
 import { Preloader } from './scenes/Preloader';
 import { TitleScreen } from './scenes/TitleScreen';
 import { Chapter1Scene } from './scenes/Chapter1Scene';
-import { BattleScene } from './scenes/BattleScene';
+import { SquadBattleScene } from './scenes/SquadBattleScene';
 import { ChapterCompleteScene } from './scenes/ChapterCompleteScene';
 import { TutorialScene } from './scenes/TutorialScene';
 
@@ -32,5 +32,5 @@ game.scene.add('Preloader', Preloader, true);
 game.scene.add('TitleScreen', TitleScreen);
 game.scene.add('TutorialScene', TutorialScene);
 game.scene.add('Chapter1Scene', Chapter1Scene);
-game.scene.add('BattleScene', BattleScene);
+game.scene.add('BattleScene', SquadBattleScene);
 game.scene.add('ChapterCompleteScene', ChapterCompleteScene);

@@ -14,10 +14,12 @@ export class Card extends Phaser.GameObjects.Container {
   private isHovered: boolean = false;
   private originalY: number = 0;
   private isPlayable: boolean = true;
+  private cooldownRemaining: number;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, cardData: CardData) {
+  constructor(scene: Phaser.Scene, x: number, y: number, cardData: CardData, cooldownRemaining: number = 0) {
     super(scene, x, y);
     this.cardData = cardData;
+    this.cooldownRemaining = cooldownRemaining;
     this.originalY = y;
     scene.add.existing(this);
     this.setDepth(100);
@@ -44,12 +46,24 @@ export class Card extends Phaser.GameObjects.Container {
     this.artRect.setStrokeStyle(1, 0x4338ca);
     this.add(this.artRect);
 
-    // Type icon in art area
-    const typeIcon = this.cardData.type === 'attack' ? '⚔' : this.cardData.type === 'defend' ? '🛡' : '✦';
-    const iconText = this.scene.add.text(0, this.artRect.y, typeIcon, {
-      fontSize: '28px',
+    const iconText = this.scene.add.text(0, this.artRect.y, this.cardData.icon, {
+      fontSize: '32px',
+      color: '#ffffff',
+      stroke: '#111827',
+      strokeThickness: 3,
     }).setOrigin(0.5);
     this.add(iconText);
+
+    if (this.cardData.cooldown) {
+      const cooldownText = this.scene.add.text(width / 2 - 8, -height / 2 + 8,
+        this.cooldownRemaining > 0 ? `CD ${this.cooldownRemaining}` : `冷却 ${this.cardData.cooldown}`, {
+          fontSize: '10px',
+          color: this.cooldownRemaining > 0 ? '#fca5a5' : '#cbd5e1',
+          backgroundColor: '#0f172a',
+          padding: { x: 4, y: 3 },
+        }).setOrigin(1, 0);
+      this.add(cooldownText);
+    }
 
     // Card name
     this.nameText = this.scene.add.text(0, this.artRect.y + artHeight / 2 + 12, this.cardData.name, {

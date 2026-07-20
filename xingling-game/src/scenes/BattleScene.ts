@@ -1,7 +1,8 @@
 import Phaser from 'phaser';
 import { Card } from '../ui/Card';
 import { type BattleForm, type CardData, createDeckForForm } from '../data/CardDatabase';
-import { saveCheckpoint } from '../data/SaveSystem';
+import { saveCheckpoint, loadSave, markBattleTutorialSeen } from '../data/SaveSystem';
+import { BattleTutorial } from '../ui/BattleTutorial';
 
 /**
  * Battle Scene - Enhanced with visual effects and animations
@@ -31,6 +32,7 @@ export class BattleScene extends Phaser.Scene {
   private hand: CardData[] = [];
   private discardPile: CardData[] = [];
   private handCards: Card[] = [];
+  private cooldowns: Record<string, number> = {};
 
   // UI elements
   private hpBar!: Phaser.GameObjects.Graphics;
@@ -80,6 +82,7 @@ export class BattleScene extends Phaser.Scene {
     this.hand = [];
     this.discardPile = [];
     this.handCards = [];
+    this.cooldowns = {};
     this.isPlayerTurn = true;
     this.turnNumber = 1;
     this.isAnimating = false;
@@ -94,6 +97,14 @@ export class BattleScene extends Phaser.Scene {
     this.drawCards(5);
     this.setEnemyIntent();
     this.updateUI();
+
+    if (!loadSave().battleTutorialSeen) {
+      this.isAnimating = true;
+      new BattleTutorial(this, () => {
+        markBattleTutorialSeen();
+        this.isAnimating = false;
+      });
+    }
 
     // Turn start flash
     this.flashScreen(0xffffff, 0.3, 300);
@@ -439,8 +450,9 @@ export class BattleScene extends Phaser.Scene {
         ? cam.width / 2
         : startX + (handWidth - 130) * (index / (this.hand.length - 1));
 
-      const card = new Card(this, x, cardY, cardData);
-      const canPlay = this.playerEnergy >= cardData.cost;
+      const cooldownRemaining = this.cooldowns[cardData.id] ?? 0;
+      const card = new Card(this, x, cardY, cardData, cooldownRemaining);
+      const canPlay = this.playerEnergy >= cardData.cost && cooldownRemaining === 0 && this.isPlayerTurn && !this.isAnimating;
       card.setPlayable(canPlay);
 
       card.on('cardPlayed', (data: CardData) => {
@@ -452,10 +464,11 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private playCard(cardData: CardData, card: Card): void {
-    if (this.playerEnergy < cardData.cost || this.isAnimating) return;
+    if (this.playerEnergy < cardData.cost || this.isAnimating || (this.cooldowns[cardData.id] ?? 0) > 0) return;
 
     this.isAnimating = true;
     this.playerEnergy -= cardData.cost;
+    if (cardData.cooldown) this.cooldowns[cardData.id] = cardData.cooldown + 1;
 
     const cam = this.cameras.main;
     const targetX = cardData.type === 'attack' ? cam.width * 0.75 : cam.width * 0.25;
@@ -728,6 +741,11 @@ export class BattleScene extends Phaser.Scene {
     }
 
     this.turnNumber++;
+    this.cooldowns = Object.fromEntries(
+      Object.entries(this.cooldowns)
+        .map(([id, turns]) => [id, Math.max(0, turns - 1)])
+        .filter(([, turns]) => turns > 0),
+    );
     this.playerEnergy = this.playerMaxEnergy;
     this.playerBlock = 0;
     this.isPlayerTurn = true;

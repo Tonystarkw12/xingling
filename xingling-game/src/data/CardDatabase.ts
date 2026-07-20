@@ -2,6 +2,8 @@
  * Card data structure
  */
 export type BattleForm = 'BSE' | 'ALE' | 'STAR';
+export type CharacterId = 'ampere' | 'iris';
+export type CardTarget = 'enemy' | 'self' | 'ally' | 'all-enemies';
 
 export interface CardData {
   id: string;
@@ -9,12 +11,16 @@ export interface CardData {
   cost: number;
   type: 'attack' | 'defend' | 'skill';
   form: BattleForm;
+  owner?: CharacterId;
+  target?: CardTarget;
   description: string;
   damage?: number;
   block?: number;
   effects?: CardEffect[];
   rarity: 'common' | 'uncommon' | 'rare';
-  artColor: number; // placeholder color
+  artColor: number;
+  icon: string;
+  cooldown?: number;
 }
 
 export interface CardEffect {
@@ -34,10 +40,13 @@ export const CARD_DATABASE: Record<string, CardData> = {
     cost: 1,
     type: 'attack',
     form: 'BSE',
+    owner: 'ampere',
+    target: 'enemy',
     description: '造成6点伤害',
     damage: 6,
     rarity: 'common',
     artColor: 0xef4444,
+    icon: '⚔',
   },
   heavy_strike: {
     id: 'heavy_strike',
@@ -45,10 +54,13 @@ export const CARD_DATABASE: Record<string, CardData> = {
     cost: 2,
     type: 'attack',
     form: 'BSE',
+    owner: 'ampere',
+    target: 'enemy',
     description: '造成12点伤害',
     damage: 12,
     rarity: 'common',
     artColor: 0xdc2626,
+    icon: '✹',
   },
   electromagnetic_bolt: {
     id: 'electromagnetic_bolt',
@@ -56,10 +68,14 @@ export const CARD_DATABASE: Record<string, CardData> = {
     cost: 1,
     type: 'attack',
     form: 'BSE',
+    owner: 'ampere',
+    target: 'enemy',
     description: '造成8点伤害\n安培尔的电磁权能',
     damage: 8,
     rarity: 'uncommon',
     artColor: 0xfbbf24,
+    icon: 'ϟ',
+    cooldown: 1,
   },
 
   // Defend cards
@@ -69,10 +85,13 @@ export const CARD_DATABASE: Record<string, CardData> = {
     cost: 1,
     type: 'defend',
     form: 'BSE',
+    owner: 'ampere',
+    target: 'self',
     description: '获得5点格挡',
     block: 5,
     rarity: 'common',
     artColor: 0x3b82f6,
+    icon: '🛡',
   },
   iron_wall: {
     id: 'iron_wall',
@@ -80,10 +99,14 @@ export const CARD_DATABASE: Record<string, CardData> = {
     cost: 2,
     type: 'defend',
     form: 'BSE',
+    owner: 'ampere',
+    target: 'self',
     description: '获得12点格挡',
     block: 12,
     rarity: 'uncommon',
     artColor: 0x1d4ed8,
+    icon: '▰',
+    cooldown: 1,
   },
 
   // Skill cards
@@ -100,6 +123,8 @@ export const CARD_DATABASE: Record<string, CardData> = {
     ],
     rarity: 'uncommon',
     artColor: 0xa78bfa,
+    icon: '✦',
+    cooldown: 2,
   },
   space_warp: {
     id: 'space_warp',
@@ -112,6 +137,8 @@ export const CARD_DATABASE: Record<string, CardData> = {
     effects: [{ type: 'draw', value: 1, target: 'self' }],
     rarity: 'uncommon',
     artColor: 0x8b5cf6,
+    icon: '◈',
+    cooldown: 1,
   },
   star_fall: {
     id: 'star_fall',
@@ -123,6 +150,8 @@ export const CARD_DATABASE: Record<string, CardData> = {
     damage: 12,
     rarity: 'rare',
     artColor: 0xfde047,
+    icon: '☄',
+    cooldown: 1,
   },
   star_guard: {
     id: 'star_guard',
@@ -134,6 +163,8 @@ export const CARD_DATABASE: Record<string, CardData> = {
     block: 18,
     rarity: 'rare',
     artColor: 0xfef08a,
+    icon: '✧',
+    cooldown: 2,
   },
   ale_burst: {
     id: 'ale_burst',
@@ -145,6 +176,8 @@ export const CARD_DATABASE: Record<string, CardData> = {
     damage: 12,
     rarity: 'uncommon',
     artColor: 0xec4899,
+    icon: '⟁',
+    cooldown: 1,
   },
   ale_guard: {
     id: 'ale_guard',
@@ -156,6 +189,25 @@ export const CARD_DATABASE: Record<string, CardData> = {
     block: 8,
     rarity: 'uncommon',
     artColor: 0xa855f7,
+    icon: '⬡',
+    cooldown: 1,
+  },
+  iris_shard: {
+    id: 'iris_shard', name: '冰晶矛', cost: 1, type: 'attack', form: 'BSE', owner: 'iris', target: 'enemy',
+    description: '造成7点冰霜伤害', damage: 7, rarity: 'common', artColor: 0x67e8f9, icon: '❄',
+  },
+  iris_zero: {
+    id: 'iris_zero', name: '绝对零度', cost: 2, type: 'attack', form: 'BSE', owner: 'iris', target: 'all-enemies',
+    description: '对全体敌人造成8点伤害', damage: 8, rarity: 'rare', artColor: 0x22d3ee, icon: '✣', cooldown: 2,
+  },
+  iris_barrier: {
+    id: 'iris_barrier', name: '冰晶屏障', cost: 1, type: 'defend', form: 'BSE', owner: 'iris', target: 'ally',
+    description: '指定队友获得8点格挡', block: 8, rarity: 'uncommon', artColor: 0x38bdf8, icon: '◇', cooldown: 1,
+  },
+  iris_restore: {
+    id: 'iris_restore', name: '寒息复苏', cost: 1, type: 'skill', form: 'BSE', owner: 'iris', target: 'ally',
+    description: '指定队友恢复6点生命', effects: [{ type: 'heal', value: 6 }],
+    rarity: 'uncommon', artColor: 0xa5f3fc, icon: '✚', cooldown: 2,
   },
 };
 
@@ -186,6 +238,17 @@ export function createDeckForForm(form: BattleForm): CardData[] {
 
   return createStarterDeck();
 }
+export function createCharacterDeck(owner: CharacterId, form: BattleForm = 'BSE'): CardData[] {
+  if (owner === 'iris') {
+    return [
+      CARD_DATABASE.iris_shard, CARD_DATABASE.iris_shard, CARD_DATABASE.iris_shard,
+      CARD_DATABASE.iris_barrier, CARD_DATABASE.iris_barrier,
+      CARD_DATABASE.iris_zero, CARD_DATABASE.iris_restore,
+    ];
+  }
+  return createDeckForForm(form);
+}
+
 export function createStarterDeck(): CardData[] {
   const deck: CardData[] = [];
 
