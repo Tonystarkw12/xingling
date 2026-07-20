@@ -66,7 +66,7 @@ RETURN caller.name, caller.filePath
 
 This repository is indexed by Repowise. Use the Repowise MCP tools for codebase orientation, discovery, implementation context, modification risk, design rationale, and cleanup planning. MCP data reflects the last index run; verify against source files before editing.
 
-Last indexed: 2026-07-19 (commit 5f48a4b). Confidence: 100%.
+Last indexed: 2026-07-19 (commit b7b875e). Confidence: 100%.
 ### Architecture
 I detect documentation-generation intent — repository overview requested. Inspecting entry points and architecture now. Xingling consumes Chinese novel/worldbuilding Markdown plus game dialogue/assets -> parses/builds static story data -> delivers React reading/wiki UI and Phaser interactive narrative/card-battle game.
 ### Entry Points

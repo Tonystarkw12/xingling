@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { Card } from '../ui/Card';
 import { type BattleForm, type CardData, createDeckForForm } from '../data/CardDatabase';
+import { saveCheckpoint } from '../data/SaveSystem';
 
 /**
  * Battle Scene - Enhanced with visual effects and animations
@@ -63,6 +64,7 @@ export class BattleScene extends Phaser.Scene {
 
   create(): void {
     const cam = this.cameras.main;
+    saveCheckpoint('battle');
     this.sound.stopAll();
     this.sound.removeAll();
 
@@ -348,9 +350,13 @@ export class BattleScene extends Phaser.Scene {
     this.drawCards(5);
 
     if (this.playerSprite) {
+      const textureKey = form === 'ALE' ? 'char_ampere_ale' : form === 'STAR' ? 'char_ampere_star' : 'char_ampere';
+      if (this.textures.exists(textureKey)) {
+        this.playerSprite.setTexture(textureKey);
+        const source = this.playerSprite.texture.getSourceImage();
+        if (source) this.playerSprite.setScale(Math.min((this.cameras.main.height * 0.4) / source.height, 0.5));
+      }
       this.playerSprite.clearTint();
-      if (form === 'ALE') this.playerSprite.setTint(0xec4899);
-      if (form === 'STAR') this.playerSprite.setTint(0xfde047);
     }
 
     this.updateFormEffects(form);
@@ -601,8 +607,6 @@ export class BattleScene extends Phaser.Scene {
       sprite.setTint(color);
       this.time.delayedCall(duration, () => {
         sprite.clearTint();
-        if (sprite === this.playerSprite && this.playerForm === 'ALE') sprite.setTint(0xec4899);
-        if (sprite === this.playerSprite && this.playerForm === 'STAR') sprite.setTint(0xfde047);
       });
     } else {
       // Rectangle - flash fill color

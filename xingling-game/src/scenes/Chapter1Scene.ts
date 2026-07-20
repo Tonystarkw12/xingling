@@ -4,6 +4,7 @@ import {
   type ChoiceOption,
 } from './BaseChapterScene';
 import { chapter1Dialogues } from '../data/chapter1';
+import { saveCheckpoint } from '../data/SaveSystem';
 
 export class Chapter1Scene extends BaseChapterScene {
   private sceneBg!: Phaser.GameObjects.Image;
@@ -99,6 +100,7 @@ export class Chapter1Scene extends BaseChapterScene {
   }
 
   protected initializeScene(): void {
+    saveCheckpoint('chapter1');
     this.sound.stopAll();
     this.sound.removeAll();
     // Play story BGM

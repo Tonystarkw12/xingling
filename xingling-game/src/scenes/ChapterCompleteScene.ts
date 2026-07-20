@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { saveCheckpoint } from '../data/SaveSystem';
 
 export class ChapterCompleteScene extends Phaser.Scene {
   constructor() {
@@ -7,7 +8,9 @@ export class ChapterCompleteScene extends Phaser.Scene {
 
   create(): void {
     const cam = this.cameras.main;
+    saveCheckpoint('complete');
     this.sound.stopAll();
+    this.sound.removeAll();
 
     this.add.rectangle(cam.width / 2, cam.height / 2, cam.width, cam.height, 0x080816);
 

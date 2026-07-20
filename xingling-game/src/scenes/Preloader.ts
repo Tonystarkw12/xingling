@@ -50,6 +50,8 @@ export class Preloader extends Phaser.Scene {
     // Load all assets directly
     // Characters (background removed)
     this.load.image('char_ampere', 'assets/characters/ampere_nobg.png');
+    this.load.image('char_ampere_ale', 'assets/characters/ampere_ale.png');
+    this.load.image('char_ampere_star', 'assets/characters/ampere_star.png');
     this.load.image('char_iris', 'assets/characters/iris_nobg.png');
     this.load.image('char_peter', 'assets/characters/peter_nobg.png');
 
