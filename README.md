@@ -1,55 +1,54 @@
-# 星灵（Xingling）
+# 星灵 - Windows 客户端
 
-《星灵》是一个中文科幻 / 奇幻长篇小说项目，并包含面向沉浸式阅读和互动叙事的网页与游戏实现。
+基于 Tauri 2 构建的 Windows 桌面客户端，将 Phaser 3 网页游戏包装为原生应用。
 
-## 项目内容
+## 前置依赖
 
-- `星灵.md`：主小说正文
-- `境界彼方.md`：前传 / 外传
-- `novels/`：短篇小说、改进版本及评分报告
-- `entities.md` / `entities.json`：角色与实体设定
-- `mempalace.yaml`：内容组织配置
-- `xingling-web/`：React 小说展示站
-- `xingling-game/`：Phaser 互动游戏
+- Rust (1.77+)
+- Node.js (18+)
+- Windows: 需安装 [Visual Studio C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) 或 Visual Studio
 
-## 技术栈
-
-### xingling-web
-
-React 19、TypeScript、Vite、Tailwind CSS、Framer Motion、Zustand。
+## 开发
 
 ```bash
-cd xingling-web
-npm install
-npm run dev
-```
+# 安装 JS 依赖
+cd xingling-game && npm install && cd ..
 
-### xingling-game
-
-Phaser 3、TypeScript、Vite、Tailwind CSS。
-
-```bash
-cd xingling-game
-bun install
-bun run dev
+# 启动开发模式（热重载）
+cd xingling-game && npm run tauri dev
 ```
 
 ## 构建
 
 ```bash
-# Web
-cd xingling-web
-npm run build
-
-# Game
-cd xingling-game
-bun run build
+# 先构建 web 资源，再编译 Tauri
+cd xingling-game && npm run tauri build
 ```
 
-## 核心世界观
+产物位于 `src-tauri/target/release/bundle/`：
+- `.msi` - Windows Installer
+- `.exe` - 绿色版可执行文件
 
-故事围绕星灵种族、星之键、权能体系与圣皇战争展开，主要舞台包括拉提麦尔星系和艾尔登超星系团。
+## 项目结构
 
-## 许可
+```
+xingling-windows/
+├── xingling-game/       # Phaser 3 网页游戏（Vite + TypeScript）
+│   └── dist/            # 构建产物（Tauri 加载此目录）
+├── src-tauri/           # Tauri 后端（Rust）
+│   ├── Cargo.toml
+│   ├── tauri.conf.json  # Tauri 配置
+│   ├── src/
+│   │   ├── main.rs
+│   │   └── lib.rs
+│   └── icons/           # 应用图标
+└── README.md
+```
 
-小说文本、世界观设定及项目素材版权归作者所有。未经许可，不得转载、改编或用于商业用途。
+## 图标生成
+
+将 1024x1024 PNG 图标放入 `src-tauri/icons/`，运行：
+
+```bash
+cd xingling-game && npx @tauri-apps/cli icon path/to/icon.png
+```
