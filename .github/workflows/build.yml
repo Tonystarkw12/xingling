@@ -3,7 +3,14 @@ name: Build macOS App
 on:
   push:
     branches: [feat/mac-client]
+    paths:
+      - "src-tauri/**"
+      - "xingling-game/**"
+      - "package.json"
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -26,28 +33,18 @@ jobs:
             src-tauri/target
             ~/.cargo/registry
             ~/.cargo/git
-          key: ${{ runner.os }}-cargo-${{ hashFiles('src-tauri/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
+          key: macos-cargo-${{ hashFiles('src-tauri/Cargo.toml') }}
+          restore-keys: macos-cargo-
 
-      - name: Cache npm
-        uses: actions/cache@v4
-        with:
-          path: xingling-game/node_modules
-          key: ${{ runner.os }}-npm-${{ hashFiles('xingling-game/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-npm-
+      - name: Install root dependencies (Tauri CLI)
+        run: npm install
 
-      - name: Install JS dependencies
-        run: |
-          cd xingling-game
-          npm ci
-
-      - name: Install Tauri CLI
-        run: npm install -g @tauri-apps/cli@^2
+      - name: Install game dependencies
+        working-directory: xingling-game
+        run: npm install
 
       - name: Build Tauri app
-        run: |
-          cd xingling-game
-          npx tauri build
+        run: npx tauri build
 
       - name: Upload macOS app
         uses: actions/upload-artifact@v4
