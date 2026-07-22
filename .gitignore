@@ -10,3 +10,5 @@ dist/
 .repowise/
 .codegraph/
 .claude/
+# Game build artifacts (copy from xingling-game/dist)
+android-app/app/src/main/assets/www/
