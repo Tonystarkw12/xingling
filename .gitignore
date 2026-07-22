@@ -10,3 +10,11 @@ dist/
 .repowise/
 .codegraph/
 .claude/
+# Tauri build artifacts
+src-tauri/target/
+src-tauri/Cargo.lock
+src-tauri/gen/
+
+# Build artifacts
+xingling-game/dist/
+xingling-game/node_modules/
