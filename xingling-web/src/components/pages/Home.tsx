@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { BookOpen, Users, Globe, Clock, Sparkles, ExternalLink } from 'lucide-react';
 
@@ -6,13 +6,13 @@ export function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4">
       {/* Title */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, ease: 'easeOut' }}
         className="text-center mb-16"
       >
-        <motion.h1
+        <m.h1
           className="text-6xl md:text-8xl font-bold mb-4 bg-gradient-to-r from-nebula-400 via-star-400 to-aurora-400 bg-clip-text text-transparent"
           animate={{
             backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
@@ -21,27 +21,27 @@ export function Home() {
           style={{ backgroundSize: '200% 200%' }}
         >
           星灵
-        </motion.h1>
-        <motion.p
+        </m.h1>
+        <m.p
           className="text-xl md:text-2xl text-text-secondary tracking-widest"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 1 }}
         >
           STAR SPIRIT
-        </motion.p>
-        <motion.div
+        </m.p>
+        <m.div
           className="mt-4 text-nebula-400 text-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
         >
           ✦ 十六卷史诗 · 二百章旅程 ✦
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
 
       {/* Navigation Cards */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.8 }}
@@ -82,10 +82,10 @@ export function Home() {
           <span className="text-text-primary font-medium">时间线</span>
           <span className="text-text-secondary text-xs mt-1">编年史</span>
         </Link>
-      </motion.div>
+      </m.div>
 
       {/* Author Info */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5, duration: 1 }}
@@ -109,12 +109,12 @@ export function Home() {
           B站主页
           <ExternalLink className="w-3 h-3" />
         </a>
-      </motion.div>
+      </m.div>
 
       {/* Decorative sparkles */}
       <div className="fixed inset-0 pointer-events-none">
         {[...Array(5)].map((_, i) => (
-          <motion.div
+          <m.div
             key={i}
             className="absolute"
             style={{
@@ -128,7 +128,7 @@ export function Home() {
             transition={{ duration: 3 + i, repeat: Infinity, delay: i * 0.5 }}
           >
             <Sparkles className="w-4 h-4 text-nebula-400/40" />
-          </motion.div>
+          </m.div>
         ))}
       </div>
     </div>

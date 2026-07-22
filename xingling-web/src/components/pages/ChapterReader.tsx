@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { volumes } from '../../data/novel';
 import { useStore, useSettings } from '../../store';
 import { ArrowLeft, ChevronLeft, ChevronRight, Type, Settings } from 'lucide-react';
@@ -38,11 +38,11 @@ export function ChapterReader() {
     return chapter.content
       .split('\n')
       .filter((line) => line.trim())
-      .map((line, idx) => {
+      .map((line) => {
         // Skip header lines that leaked through
         if (line.startsWith('# ') || line.startsWith('## ')) return null;
         return (
-          <p key={idx} className="text-justify leading-loose mb-4">
+          <p key={line} className="text-justify leading-loose mb-4">
             {line}
           </p>
         );
@@ -104,7 +104,7 @@ export function ChapterReader() {
       </div>
 
       {/* Chapter Content */}
-      <motion.article
+      <m.article
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: textVisible ? 1 : 0, y: textVisible ? 0 : 20 }}
         transition={{ duration: 0.5 }}
@@ -117,7 +117,7 @@ export function ChapterReader() {
         <div className="text-text-primary/90">
           {formattedContent}
         </div>
-      </motion.article>
+      </m.article>
 
       {/* Navigation */}
       <div className="max-w-3xl mx-auto px-6 pb-12 flex items-center justify-between border-t border-cosmic-600/30 pt-8">

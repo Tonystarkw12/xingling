@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { locations, artifacts, organizations, technologies } from '../../data/world';
 import { races } from '../../data/characters';
@@ -66,8 +66,8 @@ export function WorldView() {
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {locs.map((loc, idx) => (
-                    <motion.div
-                      key={idx}
+                    <m.div
+                      key={loc.name}
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
@@ -86,7 +86,7 @@ export function WorldView() {
                           )}
                         </div>
                       </div>
-                    </motion.div>
+                    </m.div>
                   ))}
                 </div>
               </div>
@@ -110,8 +110,8 @@ export function WorldView() {
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {items.map((art, idx) => (
-                    <motion.div
-                      key={idx}
+                    <m.div
+                      key={art.name}
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
@@ -125,7 +125,7 @@ export function WorldView() {
                           <p className="text-sm text-text-secondary leading-relaxed">{art.description}</p>
                         </div>
                       </div>
-                    </motion.div>
+                    </m.div>
                   ))}
                 </div>
               </div>
@@ -149,8 +149,8 @@ export function WorldView() {
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {orgs.map((org, idx) => (
-                    <motion.div
-                      key={idx}
+                    <m.div
+                      key={org.name}
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
@@ -159,7 +159,7 @@ export function WorldView() {
                     >
                       <h4 className="text-lg font-bold text-text-primary mb-2">{org.name}</h4>
                       <p className="text-sm text-text-secondary leading-relaxed">{org.description}</p>
-                    </motion.div>
+                    </m.div>
                   ))}
                 </div>
               </div>
@@ -172,8 +172,8 @@ export function WorldView() {
       {activeTab === 'races' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {races.map((race, idx) => (
-            <motion.div
-              key={idx}
+            <m.div
+              key={race.name}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -182,7 +182,7 @@ export function WorldView() {
             >
               <h3 className="text-xl font-bold text-text-primary mb-2">{race.name}</h3>
               <p className="text-sm text-text-secondary leading-relaxed">{race.description}</p>
-            </motion.div>
+            </m.div>
           ))}
         </div>
       )}
@@ -191,8 +191,8 @@ export function WorldView() {
       {activeTab === 'tech' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {technologies.map((tech, idx) => (
-            <motion.div
-              key={idx}
+            <m.div
+              key={tech.name}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -206,7 +206,7 @@ export function WorldView() {
                   <p className="text-sm text-text-secondary leading-relaxed">{tech.description}</p>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           ))}
         </div>
       )}

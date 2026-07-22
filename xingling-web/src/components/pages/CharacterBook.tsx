@@ -1,18 +1,18 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { characters, races } from '../../data/characters';
 import { ArrowLeft, X, Zap, Heart } from 'lucide-react';
 
 export function CharacterBook() {
   const [selectedRace, setSelectedRace] = useState<string | null>(null);
-  const [selectedChar, setSelectedChar] = useState<number | null>(null);
+  const [selectedChar, setSelectedChar] = useState<string | null>(null);
 
   const filtered = selectedRace
     ? characters.filter((c) => c.race === selectedRace)
     : characters;
 
-  const selected = selectedChar !== null ? filtered[selectedChar] : null;
+  const selected = characters.find((character) => character.name === selectedChar) ?? null;
 
   return (
     <div className="min-h-screen px-4 py-8 max-w-5xl mx-auto">
@@ -61,9 +61,9 @@ export function CharacterBook() {
       {/* Character Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map((char, idx) => (
-          <motion.button
-            key={idx}
-            onClick={() => setSelectedChar(idx)}
+          <m.button
+            key={char.name}
+            onClick={() => setSelectedChar(char.name)}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -95,21 +95,21 @@ export function CharacterBook() {
                 <span className="text-xs text-text-secondary">+{char.volumes.length - 5}</span>
               )}
             </div>
-          </motion.button>
+          </m.button>
         ))}
       </div>
 
       {/* Character Detail Modal */}
       <AnimatePresence>
         {selected && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
             onClick={() => setSelectedChar(null)}
           >
-            <motion.div
+            <m.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
@@ -163,8 +163,8 @@ export function CharacterBook() {
                   <div>
                     <span className="text-sm text-aurora-400 font-medium">人物关系:</span>
                     <ul className="text-sm text-text-secondary mt-1 space-y-0.5">
-                      {selected.relationships.map((rel, i) => (
-                        <li key={i}>· {rel}</li>
+                      {selected.relationships.map((rel) => (
+                        <li key={rel}>· {rel}</li>
                       ))}
                     </ul>
                   </div>
@@ -184,8 +184,8 @@ export function CharacterBook() {
                   ))}
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

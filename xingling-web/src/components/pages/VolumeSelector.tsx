@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { volumes } from '../../data/novel';
 import { useStore } from '../../store';
@@ -53,8 +53,8 @@ export function VolumeSelector() {
           const chapterCount = volume.chapters.length;
 
           return (
-            <motion.button
-              key={idx}
+            <m.button
+              key={volume.title}
               onClick={() => setSelectedVolume(isSelected ? null : idx)}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -79,7 +79,7 @@ export function VolumeSelector() {
               <p className="text-sm text-text-secondary">
                 {chapterCount} 章
               </p>
-            </motion.button>
+            </m.button>
           );
         })}
       </div>
@@ -87,7 +87,7 @@ export function VolumeSelector() {
       {/* Chapter List */}
       <AnimatePresence>
         {selectedVolume !== null && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -117,7 +117,7 @@ export function VolumeSelector() {
                 </Link>
               ))}
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

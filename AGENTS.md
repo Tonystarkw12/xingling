@@ -66,23 +66,29 @@ RETURN caller.name, caller.filePath
 
 This repository is indexed by Repowise. Use the Repowise MCP tools for codebase orientation, discovery, implementation context, modification risk, design rationale, and cleanup planning. MCP data reflects the last index run; verify against source files before editing.
 
-Last indexed: 2026-07-20 (commit 0820344). Confidence: 100%.
+Last indexed: 2026-07-20 (commit b4f9241). Confidence: 100%.
 ### Architecture
-Ingests xingling-game & xingling-web TypeScript sources -> parses ASTs -> resolves scene/card/character data -> compiles bundles -> serves interactive narrative w/ centralized store -> outputs web/game binaries. repo (monorepo) | 114 files | 35206 LOC
-JS: 3.5% | JSON: 10.5% | MD: 57.0% | SH: 0.9% | TOML: 0.9% | TS: 25.4% | YAML: 1.8%
-Hotspots: 0 | Stable core: 0 | Top churn (90d): AGENTS.md, xingling-game/src/main.ts, xingling-game/src/scenes/BattleScene.ts | Oldest: AGENTS.md (82d)
-TS: 25.4% | JS: 3.5% | JSON: 10.5% | MD: 57.0% | YAML: 1.8% | SH: 0.9% | TOML: 0.9%
-Packages: xingling-game (TS) | xingling-web (TS)
+Ingests TypeScript source files & JSON configuration manifests, compiles via monorepo build pipeline, deploys interactive web application & game runtime environment. repo | monorepo | 116 files | 35936 LOC
+xingling-game -> typescript
+xingling-web -> typescript
+Hotspots: 0 | Stable core: 0
+Most changed (90d): AGENTS.md & xingling-game/src/main.ts & xingling-game/src/scenes/BattleScene.ts
+Oldest: AGENTS.md (82 days)
+TypeScript -> 26.7%
+Markdown -> 56.0%
+JSON -> 10.3%
+JavaScript -> 3.4%
+YAML -> 1.7%
+Shell -> 0.9%
+TOML -> 0.9%
 xingling-game/src/main.ts
 xingling-web/src/App.tsx
 xingling-web/src/main.tsx
 xingling-web/src/store/index.ts
-Data layer: xingling-game/src/data/SaveSystem.ts (0.0185) | xingling-game/src/data/CardDatabase.ts (0.0110) | xingling-web/src/data/characters.ts (0.0084) | xingling-game/src/data/chapter1.ts (0.0082)
-State: xingling-web/src/store/index.ts (0.0100)
-Scene graph: xingling-game/src/scenes/BaseChapterScene.ts (0.0152)
-UI components: xingling-game/src/ui/ChoicePanel.ts (0.0095) | xingling-game/src/ui/CharacterPortrait.ts (0.0095) | xingling-game/src/ui/DialogueBox.ts (0.0095)
-Flow: xingling-web/src/store/index.ts -> xingling-web/src/App.tsx -> xingling-game/src/scenes/BaseChapterScene.ts -> xingling-game/src/data/* -> xingling-game/src/ui/*
-Churn: AGENTS.md, xingling-game/src/main.ts, xingling-game/src/scenes/BattleScene.ts (90d)
+Monorepo layout -> xingling-game & xingling-web packages
+PageRank top files -> xingling-game/src/data/SaveSystem.ts (0.0188) & xingling-game/src/scenes/BaseChapterScene.ts (0.0148) & xingling-game/src/data/CardDatabase.ts (0.0118) & xingling-web/src/store/index.ts (0.0097) & xingling-game/src/ui/ChoicePanel.ts (0.0092) & xingling-game/src/ui/DialogueBox.ts (0.0092) & xingling-game/src/ui/CharacterPortrait.ts (0.0092) & xingling-game/src/ui/BattleTutorial.ts (0.0083) & xingling-game/src/ui/Card.ts (0.0083) & xingling-web/src/data/characters.ts (0.0082) & xingling-game/src/data/chapter1.ts (0.0080)
+Churn analysis -> 0 high-churn/high-complexity files
+Stability -> 0 files unchanged 90+ days
 ### Entry Points
 - `xingling-web/src/App.tsx`
 - `xingling-game/src/main.ts`
@@ -90,8 +96,9 @@ Churn: AGENTS.md, xingling-game/src/main.ts, xingling-game/src/scenes/BattleScen
 ### Risk Hotspots
 | File | Churn | 90d Commits | Owner |
 |------|-------|-------------|-------|
-| `xingling-game/src/scenes/BattleScene.ts` | 100.0th percentile | 3 | tony |
-| `xingling-game/src/scenes/Chapter1Scene.ts` | 81.1th percentile | 3 | tony |
+| `xingling-game/src/scenes/BattleScene.ts` | 100.0th percentile | 4 | tony |
+| `xingling-game/src/data/CardDatabase.ts` | 89.7th percentile | 3 | tony |
+| `xingling-game/src/scenes/Chapter1Scene.ts` | 76.9th percentile | 3 | tony |
 
 ### Repowise MCP Workflow
 

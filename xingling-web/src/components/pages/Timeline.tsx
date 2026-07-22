@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Sparkles, Flame, Skull, Shield, Heart, Star, Zap, Flag } from 'lucide-react';
 
@@ -794,9 +794,9 @@ export function Timeline() {
       </div>
 
       {/* Timeline by Era */}
-      {eras.map((era, eraIdx) => (
+      {eras.map((era) => (
         era.events.length > 0 && (
-          <div key={eraIdx} className="mb-12">
+          <div key={era.label} className="mb-12">
             <h2 className="text-xl font-bold text-text-accent mb-6 pb-2 border-b border-cosmic-600/30">
               {era.label}
               <span className="ml-2 text-sm text-text-secondary font-normal">({era.events.length}件)</span>
@@ -812,8 +812,8 @@ export function Timeline() {
                   const IconComponent = iconMap[event.icon] || Sparkles;
 
                   return (
-                    <motion.div
-                      key={idx}
+                    <m.div
+                      key={`${event.volume}-${event.year}-${event.title}`}
                       initial={{ opacity: 0, x: -20 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
@@ -839,7 +839,7 @@ export function Timeline() {
                         <h3 className="text-lg font-bold text-text-primary mb-2">{event.title}</h3>
                         <p className="text-sm text-text-secondary leading-relaxed">{event.description}</p>
                       </div>
-                    </motion.div>
+                    </m.div>
                   );
                 })}
               </div>
