@@ -66,7 +66,7 @@ RETURN caller.name, caller.filePath
 
 This repository is indexed by Repowise. Use the Repowise MCP tools for codebase orientation, discovery, implementation context, modification risk, design rationale, and cleanup planning. MCP data reflects the last index run; verify against source files before editing.
 
-Last indexed: 2026-07-20 (commit b4f9241). Confidence: 100%.
+Last indexed: 2026-07-22 (commit 2e2350e). Confidence: 100%.
 ### Architecture
 Ingests TypeScript source files & JSON configuration manifests, compiles via monorepo build pipeline, deploys interactive web application & game runtime environment. repo | monorepo | 116 files | 35936 LOC
 xingling-game -> typescript
