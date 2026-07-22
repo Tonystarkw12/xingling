@@ -6,8 +6,8 @@
   "build": {
     "frontendDist": "../xingling-game/dist",
     "devUrl": "http://localhost:5173",
-    "beforeDevCommand": "npm run dev --prefix ../xingling-game",
-    "beforeBuildCommand": "npm run build --prefix ../xingling-game"
+    "beforeDevCommand": "npm run dev --prefix ./xingling-game",
+    "beforeBuildCommand": "npm run build --prefix ./xingling-game"
   },
   "app": {
     "windows": [
