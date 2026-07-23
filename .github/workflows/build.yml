@@ -26,6 +26,10 @@ jobs:
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Install Windows dependencies
+        run: |
+          choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --passive --norestart"
+
       - name: Cache Rust dependencies
         uses: actions/cache@v4
         with:
@@ -44,7 +48,7 @@ jobs:
         run: npm install
 
       - name: Build Tauri app
-        run: npx tauri build
+        run: npx @tauri-apps/cli build
 
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
