@@ -7,6 +7,7 @@ on:
       - "src-tauri/**"
       - "xingling-game/**"
       - "package.json"
+      - ".github/workflows/**"
   workflow_dispatch:
 
 permissions:
