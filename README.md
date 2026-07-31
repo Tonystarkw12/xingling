@@ -1,33 +1,47 @@
-# 星灵 - Windows 客户端
+# 星灵桌面客户端
 
-基于 Tauri 2 构建的 Windows 桌面客户端，将 Phaser 3 网页游戏包装为原生应用。
+基于 Tauri 2 构建，将 Phaser 3 网页游戏包装为原生应用。
+
+## 下载
+
+从 [GitHub Releases](https://github.com/Tonystarkw12/xingling/releases/latest) 下载对应平台安装包：
+
+- **Windows**：`*_x64-setup.exe`（NSIS 安装程序）
+- **macOS**：`.dmg`
+- **Android**：`app-debug.apk`（测试包；安装前需在设备设置中允许未知来源应用）
 
 ## 前置依赖
 
-- Rust (1.77+)
-- Node.js (18+)
-- Windows: 需安装 [Visual Studio C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) 或 Visual Studio
+- Rust（1.77+）
+- Node.js（18+）
+- Windows：安装 [Visual Studio C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) 或 Visual Studio
 
 ## 开发
 
 ```bash
-# 安装 JS 依赖
-cd xingling-game && npm install && cd ..
-
-# 启动开发模式（热重载）
-cd xingling-game && npm run tauri dev
+npm install
+npm --prefix xingling-game install
+npx tauri dev
 ```
 
 ## 构建
 
 ```bash
-# 先构建 web 资源，再编译 Tauri
-cd xingling-game && npm run tauri build
+npm install
+npm --prefix xingling-game ci
+npx tauri build
 ```
 
-产物位于 `src-tauri/target/release/bundle/`：
-- `.msi` - Windows Installer
-- `.exe` - 绿色版可执行文件
+Windows 产物位于 `src-tauri/target/release/bundle/nsis/`。
+
+## 发布
+
+推送 `v*` tag 自动运行 GitHub Actions，构建 Windows NSIS `.exe` 并发布到 GitHub Release。
+
+```bash
+git tag -a v0.1.2 -m "Release v0.1.2"
+git push origin v0.1.2
+```
 
 ## 项目结构
 
