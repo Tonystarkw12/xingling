@@ -12,6 +12,16 @@
 - `xingling-web/`：React 小说展示站
 - `xingling-game/`：Phaser 互动游戏
 
+## 客户端下载
+
+从 [GitHub Releases](https://github.com/Tonystarkw12/xingling/releases/latest) 下载对应平台客户端：
+
+- **Windows**：`*_x64-setup.exe`（NSIS 安装程序）
+- **macOS**：`.dmg`
+- **Android**：`app-debug.apk`（测试包；安装前需允许未知来源应用）
+
+中国大陆网络可通过 [GitHub 下载镜像](https://ghproxy.201014.xyz/https://github.com/Tonystarkw12/xingling/releases/latest) 访问。
+
 ## 技术栈
 
 ### xingling-web
