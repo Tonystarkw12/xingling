@@ -18,3 +18,7 @@ src-tauri/gen/
 # Build artifacts
 xingling-game/dist/
 xingling-game/node_modules/
+
+# MemPalace per-project files (issue #185)
+mempalace.yaml
+entities.json
