@@ -1,12 +1,41 @@
-.gitnexus
-
-# === Environment (added by batch) ===
+# === Environment ===
 .env
 .env.local
 .env.*.local
 
 node_modules/
 dist/
+
+# === Index/intelligence tools ===
+.gitnexus/
 .repowise/
 .codegraph/
 .claude/
+.zread/
+.spec-workflow/
+
+# === Editor / agent tool artifacts (never commit) ===
+.vscode/
+.cursor/
+.codex/
+.serena/
+.agents/
+.teamai/
+.mimocode/
+.claude-flow/
+.swarm/
+.mcp.json
+agentdb.rvf
+agentdb.rvf.lock
+semantica.log
+env/
+members/
+rules/
+skills/
+teamai.yaml
+
+# >>> Comet managed project state >>>
+!/.comet/
+/.comet/*
+!/.comet/config.yaml
+# <<< Comet managed project state <<<
