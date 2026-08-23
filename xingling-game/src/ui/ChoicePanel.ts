@@ -88,6 +88,8 @@ export class ChoicePanel extends Phaser.GameObjects.Container {
       fontSize: '18px',
       fontFamily: '"Noto Serif SC", "Source Han Serif CN", STSong, serif',
       color: '#e0e7ff',
+      wordWrap: { width: width - 20, useAdvancedWrap: true },
+      align: 'center',
     }).setOrigin(0.5);
     container.add(text);
 

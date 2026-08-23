@@ -55,8 +55,15 @@ export class Preloader extends Phaser.Scene {
     this.load.image('char_iris', 'assets/characters/iris_nobg.png');
     this.load.image('char_peter', 'assets/characters/peter_nobg.png');
 
+    // Enemy portraits
+    this.load.image('enemy_guard', 'assets/characters/enemy_guard.png');
+    this.load.image('enemy_hunter', 'assets/characters/enemy_hunter.png');
+    this.load.image('enemy_mage', 'assets/characters/enemy_mage.png');
+    this.load.image('enemy_elite_guard', 'assets/characters/enemy_elite_guard.png');
+
     // Scene backgrounds
     this.load.image('bg_nock_city', 'assets/scenes/nock_city.png');
+    this.load.image('bg_battle_arena', 'assets/scenes/battle_arena.png');
 
     // Storyboard backgrounds
     for (let i = 1; i <= 14; i++) {

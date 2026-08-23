@@ -109,6 +109,19 @@ export function Home() {
           B站主页
           <ExternalLink className="w-3 h-3" />
         </a>
+        <a
+          href="https://github.com/Tonystarkw12/xingling"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-3 inline-flex items-center gap-1.5 text-xs text-text-secondary hover:text-text-primary transition-colors px-4 py-2 rounded-full border border-cosmic-600/50 hover:border-nebula-400/50"
+        >
+          <span className="font-semibold">GH</span>
+          GitHub 项目
+          <ExternalLink className="w-3 h-3" />
+        </a>
+        <p className="mt-3 text-text-secondary text-xs">
+          GitHub Releases 提供 Android、Windows、macOS、Linux 多端安装包
+        </p>
       </m.div>
 
       {/* Decorative sparkles */}

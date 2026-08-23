@@ -55,18 +55,54 @@ export class TitleScreen extends Phaser.Scene {
 
     const hasProgress = save.updatedAt !== '';
     if (hasProgress) {
-      this.createButton(cam.width / 2, cam.height * 0.62, '继续游戏', 0x4338ca, () => {
+      this.createButton(cam.width / 2, cam.height * 0.56, '继续游戏', 0x4338ca, () => {
         this.startScene(sceneForCheckpoint(save.checkpoint));
+      });
+
+      // Two-column layout for secondary buttons
+      const colL = cam.width / 2 - 120;
+      const colR = cam.width / 2 + 120;
+      const row1Y = cam.height * 0.66;
+
+      this.createButton(colL, row1Y, '章节选择', 0x1e3a5f, () => {
+        this.startScene('ChapterSelectScene');
+      }, 200, 42);
+
+      this.createButton(colR, row1Y, '人物', 0x1e3a5f, () => {
+        this.startScene('CharacterPanelScene');
+      }, 200, 42);
+
+      const row2Y = cam.height * 0.75;
+      this.createButton(colL, row2Y, '装备', 0x1e3a5f, () => {
+        this.startScene('EquipmentScene');
+      }, 200, 42);
+
+      this.createButton(colR, row2Y, '卡牌强化', 0x1e3a5f, () => {
+        this.startScene('CardUpgradeScene');
+      }, 200, 42);
+
+      const row3Y = cam.height * 0.84;
+      this.createButton(colL, row3Y, '设置', 0x1e293b, () => {
+        this.startScene('SettingsScene');
+      }, 200, 42);
+
+      this.createButton(colR, row3Y, '新游戏', 0x334155, () => {
+        clearSave();
+        this.startScene('TutorialScene');
+      }, 200, 42);
+    } else {
+      this.createButton(cam.width / 2, cam.height * 0.62, '新游戏', 0x334155, () => {
+        clearSave();
+        this.startScene('TutorialScene');
+      });
+
+      this.createButton(cam.width / 2, cam.height * 0.72, '设置', 0x1e293b, () => {
+        this.startScene('SettingsScene');
       });
     }
 
-    this.createButton(cam.width / 2, cam.height * (hasProgress ? 0.72 : 0.65), '新游戏', 0x334155, () => {
-      clearSave();
-      this.startScene('TutorialScene');
-    });
-
     if (hasProgress) {
-      const clear = this.add.text(cam.width / 2, cam.height * 0.82, '清除存档', {
+      const clear = this.add.text(cam.width / 2, cam.height - 30, '清除存档', {
         fontSize: '14px',
         color: '#94a3b8',
       }).setOrigin(0.5).setInteractive({ useHandCursor: true });
@@ -90,12 +126,15 @@ export class TitleScreen extends Phaser.Scene {
     this.createSnow(cam);
   }
 
-  private createButton(x: number, y: number, label: string, color: number, action: () => void): void {
-    const button = this.add.rectangle(x, y, 220, 48, color)
+  private createButton(x: number, y: number, label: string, color: number, action: () => void, width?: number, height?: number): void {
+    const btnWidth = width ?? 220;
+    const btnHeight = height ?? 48;
+    const button = this.add.rectangle(x, y, btnWidth, btnHeight, color)
       .setStrokeStyle(2, 0x818cf8)
       .setInteractive({ useHandCursor: true });
+    const textSize = btnHeight >= 44 ? 19 : 16;
     const text = this.add.text(x, y, label, {
-      fontSize: '19px',
+      fontSize: `${textSize}px`,
       fontFamily: '"Noto Serif SC", serif',
       color: '#ffffff',
       fontStyle: 'bold',

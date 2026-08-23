@@ -5,6 +5,7 @@ import {
 } from './BaseChapterScene';
 import { chapter1Dialogues } from '../data/chapter1';
 import { saveCheckpoint } from '../data/SaveSystem';
+import { loadSettings, toVolume } from '../data/SettingsSystem';
 
 export class Chapter1Scene extends BaseChapterScene {
   private sceneBg!: Phaser.GameObjects.Image;
@@ -103,9 +104,10 @@ export class Chapter1Scene extends BaseChapterScene {
     saveCheckpoint('chapter1');
     this.sound.stopAll();
     this.sound.removeAll();
+    const settings = loadSettings();
     // Play story BGM
     if (this.cache.audio.exists('bgm_episode1')) {
-      this.sound.add('bgm_episode1', { loop: true, volume: 0.5 }).play();
+      this.sound.add('bgm_episode1', { loop: true, volume: toVolume(settings.bgmVolume) }).play();
     }
   }
 

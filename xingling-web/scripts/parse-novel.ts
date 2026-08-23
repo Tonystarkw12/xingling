@@ -3,7 +3,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const novelPath = join(__dirname, '..', '..', '星灵.md');
+const novelPath = join(__dirname, '..', '..', 'novels', '星灵.md');
 const outputPath = join(__dirname, '..', 'src', 'data', 'novel.ts');
 
 interface Chapter {
@@ -104,7 +104,7 @@ function parseNovel(): Volume[] {
 
 const volumes = parseNovel();
 
-const tsContent = `// Auto-generated from 星灵.md - DO NOT EDIT
+const tsContent = `// Auto-generated from novels/星灵.md - DO NOT EDIT
 export interface Chapter {
   title: string;
   content: string;

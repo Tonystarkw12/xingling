@@ -744,7 +744,7 @@ export class BattleScene extends Phaser.Scene {
     this.cooldowns = Object.fromEntries(
       Object.entries(this.cooldowns)
         .map(([id, turns]) => [id, Math.max(0, turns - 1)])
-        .filter(([, turns]) => turns > 0),
+        .filter(([, turns]) => (turns as number) > 0),
     );
     this.playerEnergy = this.playerMaxEnergy;
     this.playerBlock = 0;

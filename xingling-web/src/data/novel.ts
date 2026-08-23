@@ -1,4 +1,4 @@
-// Auto-generated from 星灵.md - DO NOT EDIT
+// Auto-generated from novels/星灵.md - DO NOT EDIT
 export interface Chapter {
   title: string;
   content: string;

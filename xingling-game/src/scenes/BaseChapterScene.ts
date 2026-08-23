@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { DialogueBox, type DialogueBoxConfig } from '../ui/DialogueBox';
 import { CharacterPortrait, type PortraitConfig } from '../ui/CharacterPortrait';
 import { ChoicePanel, type ChoiceDisplayOption } from '../ui/ChoicePanel';
+import { loadSettings, textSpeedToDelay } from '../data/SettingsSystem';
 
 // ============================================================================
 // TYPES
@@ -49,6 +50,13 @@ export abstract class BaseChapterScene extends Phaser.Scene {
   protected isChoiceActive: boolean = false;
   private isAutoAdvancing: boolean = false;
 
+  // Fast-forward & skip
+  private isFastForward: boolean = false;
+  private ffAutoTimer?: Phaser.Time.TimerEvent;
+  private ffIndicator?: Phaser.GameObjects.Text;
+  private ffButton?: Phaser.GameObjects.Text;
+  private skipIndicator?: Phaser.GameObjects.Text;
+
   protected characters: Map<string, CharacterConfig> = new Map();
   protected activeCharacters: Map<string, CharacterPortrait> = new Map();
 
@@ -73,6 +81,7 @@ export abstract class BaseChapterScene extends Phaser.Scene {
     this.createUI();
     this.setupDefaultInputs();
     this.setupInputs();
+    this.setupFastForwardAndSkip();
     this.initializeScene();
 
     this.dialogues = this.initializeDialogues();
@@ -117,6 +126,7 @@ export abstract class BaseChapterScene extends Phaser.Scene {
 
   protected getDialogueBoxConfig(): DialogueBoxConfig {
     const cam = this.cameras.main;
+    const settings = loadSettings();
     return {
       x: cam.width / 2,
       y: cam.height - 100,
@@ -124,7 +134,7 @@ export abstract class BaseChapterScene extends Phaser.Scene {
       height: 170,
       backgroundColor: 0x0a0a2e,
       backgroundAlpha: 0.92,
-      typeSpeed: 35,
+      typeSpeed: textSpeedToDelay(settings.textSpeed),
       padding: 20,
     };
   }
@@ -132,6 +142,7 @@ export abstract class BaseChapterScene extends Phaser.Scene {
   protected setupDefaultInputs(): void {
     this.input.on('pointerdown', () => {
       if (this.isChoiceActive) return;
+      if (this.isFastForward) return; // Don't advance on click during FF
       if (this.isWaitingForInput) {
         this.handleDialogueInput();
       }
@@ -148,6 +159,199 @@ export abstract class BaseChapterScene extends Phaser.Scene {
     spaceKey?.on('down', () => {
       if (this.isChoiceActive) return;
       if (this.isWaitingForInput) this.handleDialogueInput();
+    });
+  }
+
+  /**
+   * Fast-forward: Ctrl (hold) or F (toggle) — auto-advance at 2x speed.
+   * Skip: S key — jump to next choice point or chapter end.
+   */
+  private setupFastForwardAndSkip(): void {
+    const cam = this.cameras.main;
+
+    // ── Visible buttons (top-right) ──
+    const btnY = 22;
+    const btnH = 30;
+    const btnW = 80;
+    const gap = 8;
+    const rightEdge = cam.width - 16;
+
+    // Skip button
+    const skipBtn = this.add.text(rightEdge - btnW, btnY, '跳过 S', {
+      fontSize: '13px', fontFamily: '"Noto Serif SC", serif',
+      color: '#f87171', fontStyle: 'bold',
+      backgroundColor: '#7f1d1d', padding: { x: 10, y: 6 },
+    }).setOrigin(0, 0).setDepth(500).setInteractive({ useHandCursor: true });
+    skipBtn.on('pointerdown', () => {
+      if (!this.isChoiceActive) this.skipToNextChoice();
+    });
+
+    // Fast-forward button (toggle)
+    this.ffButton = this.add.text(rightEdge - btnW * 2 - gap, btnY, '快进 F', {
+      fontSize: '13px', fontFamily: '"Noto Serif SC", serif',
+      color: '#fbbf24', fontStyle: 'bold',
+      backgroundColor: '#78350f', padding: { x: 10, y: 6 },
+    }).setOrigin(0, 0).setDepth(500).setInteractive({ useHandCursor: true });
+    this.ffButton.on('pointerdown', () => {
+      if (this.isChoiceActive) return;
+      if (this.isFastForward) {
+        this._ffToggled = false;
+        this.stopFastForward();
+      } else {
+        this._ffToggled = true;
+        this.startFastForward();
+      }
+    });
+
+    // Status indicator (shows when active)
+    this.ffIndicator = this.add.text(rightEdge, btnY + btnH + 6, '▶▶ 快进中', {
+      fontSize: '14px', fontFamily: '"Noto Serif SC", serif',
+      color: '#fbbf24', fontStyle: 'bold',
+      backgroundColor: '#78350f', padding: { x: 8, y: 4 },
+    }).setOrigin(1, 0).setDepth(500).setVisible(false);
+
+    this.skipIndicator = this.add.text(rightEdge, btnY + btnH + 6, '⏩ 跳过中...', {
+      fontSize: '14px', fontFamily: '"Noto Serif SC", serif',
+      color: '#f87171', fontStyle: 'bold',
+      backgroundColor: '#7f1d1d', padding: { x: 8, y: 4 },
+    }).setOrigin(1, 0).setDepth(500).setVisible(false);
+
+    // ── Keyboard shortcuts ──
+    // Ctrl — hold for fast-forward
+    const ctrlKey = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL);
+    ctrlKey?.on('down', () => { if (!this.isFastForward) this.startFastForward(); });
+    ctrlKey?.on('up', () => { if (this.isFastForward && !this._ffToggled) this.stopFastForward(); });
+
+    // F — toggle fast-forward
+    this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.F)?.on('down', () => {
+      if (this.isChoiceActive) return;
+      if (this.isFastForward) { this._ffToggled = false; this.stopFastForward(); }
+      else { this._ffToggled = true; this.startFastForward(); }
+    });
+
+    // S — skip to next choice
+    this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.S)?.on('down', () => {
+      if (!this.isChoiceActive) this.skipToNextChoice();
+    });
+  }
+
+  private _ffToggled: boolean = false;
+
+  private startFastForward(): void {
+    if (this.isFastForward || this.isChoiceActive) return;
+    this.isFastForward = true;
+    this.ffIndicator?.setVisible(true);
+    this.ffButton?.setBackgroundColor('#b45309').setText('停止 F');
+
+    // Double the typewriter speed
+    if (this.dialogueBox) {
+      const settings = loadSettings();
+      const baseSpeed = textSpeedToDelay(settings.textSpeed);
+      this.dialogueBox.setTypeSpeed(Math.max(8, Math.floor(baseSpeed / 2)));
+    }
+
+    // Auto-advance after short delay
+    this.scheduleFFAdvance();
+  }
+
+  private stopFastForward(): void {
+    this.isFastForward = false;
+    this._ffToggled = false;
+    this.ffIndicator?.setVisible(false);
+    this.ffButton?.setBackgroundColor('#78350f').setText('快进 F');
+    this.ffAutoTimer?.destroy();
+    this.ffAutoTimer = undefined;
+
+    // Restore normal typewriter speed
+    if (this.dialogueBox) {
+      const settings = loadSettings();
+      this.dialogueBox.setTypeSpeed(textSpeedToDelay(settings.textSpeed));
+    }
+  }
+
+  private scheduleFFAdvance(): void {
+    this.ffAutoTimer?.destroy();
+    if (!this.isFastForward || this.isChoiceActive) return;
+
+    this.ffAutoTimer = this.time.delayedCall(400, () => {
+      if (!this.isFastForward || this.isChoiceActive) return;
+
+      if (this.isWaitingForInput) {
+        // Complete typewriter first if still typing
+        if (this.dialogueBox?.getIsTyping()) {
+          this.dialogueBox.completeTypewriter();
+          // Then advance after a short pause
+          this.time.delayedCall(150, () => {
+            if (this.isFastForward && this.isWaitingForInput) {
+              this.advanceDialogue();
+            }
+            this.scheduleFFAdvance();
+          });
+        } else {
+          this.advanceDialogue();
+          this.scheduleFFAdvance();
+        }
+      } else if (this.isAutoAdvancing) {
+        // Wait for auto-advance to finish
+        this.scheduleFFAdvance();
+      }
+    });
+  }
+
+  /**
+   * Skip to next choice entry or end of chapter.
+   * Plays a brief "skipping" animation.
+   */
+  private skipToNextChoice(): void {
+    if (this.isChoiceActive || !this.isDialoguePlaying) return;
+
+    this.skipIndicator?.setVisible(true);
+
+    // Stop fast-forward if active
+    if (this.isFastForward) this.stopFastForward();
+
+    // Find next choice or end
+    let targetIndex = this.currentDialogueIndex + 1;
+    while (targetIndex < this.dialogues.length) {
+      const entry = this.dialogues[targetIndex];
+      if (entry.type === 'choice') break;
+      targetIndex++;
+    }
+
+    // Skip animations
+    this.isAutoAdvancing = false;
+    this.isWaitingForInput = false;
+    this.ffAutoTimer?.destroy();
+
+    // Process character enter/exit events along the way (so characters appear correctly)
+    for (let i = this.currentDialogueIndex; i < targetIndex; i++) {
+      const entry = this.dialogues[i];
+      if (entry.type === 'character') {
+        const charId = entry.characterId ?? '';
+        const charConfig = this.characters.get(charId);
+        if (entry.action === 'enter' && charConfig) {
+          const position = entry.position ?? charConfig.defaultPosition ?? 'center';
+          this.handleCharacterEnter(charId, charConfig, position);
+        } else if (entry.action === 'exit') {
+          this.handleCharacterExit(charId);
+        }
+      } else if (entry.type === 'event') {
+        this.onDialogueEvent(entry.action ?? '', entry.data);
+      }
+    }
+
+    this.currentDialogueIndex = targetIndex;
+
+    // Brief delay for visual feedback
+    this.time.delayedCall(300, () => {
+      this.skipIndicator?.setVisible(false);
+      if (this.currentDialogueIndex >= this.dialogues.length) {
+        this.isDialoguePlaying = false;
+        if (this.dialogueBox) this.dialogueBox.setBoxVisible(false);
+        this.onChapterComplete();
+      } else {
+        this.processCurrentEntry();
+      }
     });
   }
 
@@ -220,6 +424,7 @@ export abstract class BaseChapterScene extends Phaser.Scene {
     this.currentDialogueIndex++;
     if (this.currentDialogueIndex >= this.dialogues.length) {
       this.isDialoguePlaying = false;
+      this.stopFastForward();
       if (this.dialogueBox) this.dialogueBox.setBoxVisible(false);
       this.onChapterComplete();
       return;
@@ -261,6 +466,7 @@ export abstract class BaseChapterScene extends Phaser.Scene {
         }));
         if (options.length === 0) { this.advanceDialogue(); break; }
         this.isChoiceActive = true;
+        this.stopFastForward(); // Stop FF when reaching a choice
         this.showChoiceUI(entry.prompt ?? '', options);
         break;
       }

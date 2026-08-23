@@ -3,7 +3,7 @@
  */
 export type BattleForm = 'BSE' | 'ALE' | 'STAR';
 export type CharacterId = 'ampere' | 'iris';
-export type CardTarget = 'enemy' | 'self' | 'ally' | 'all-enemies';
+export type CardTarget = 'enemy' | 'self' | 'ally' | 'all-enemies' | 'all-allies';
 
 export interface CardData {
   id: string;
@@ -24,9 +24,11 @@ export interface CardData {
 }
 
 export interface CardEffect {
-  type: 'draw' | 'energy' | 'damage' | 'block' | 'heal';
+  type: 'draw' | 'energy' | 'damage' | 'block' | 'heal' | 'poison' | 'burn' | 'weakness' | 'vulnerable' | 'lifesteal';
   value: number;
   target?: 'self' | 'enemy';
+  /** Duration in turns for status effects */
+  duration?: number;
 }
 
 /**
@@ -209,6 +211,88 @@ export const CARD_DATABASE: Record<string, CardData> = {
     description: '指定队友恢复6点生命', effects: [{ type: 'heal', value: 6 }],
     rarity: 'uncommon', artColor: 0xa5f3fc, icon: '✚', cooldown: 2,
   },
+
+  // Iris ALE form — offensive support
+  iris_ale_lance: {
+    id: 'iris_ale_lance', name: '极冰长枪', cost: 2, type: 'attack', form: 'ALE', owner: 'iris', target: 'enemy',
+    description: '造成12点伤害\n施加2层虚弱', damage: 12,
+    effects: [{ type: 'weakness', value: 25, target: 'enemy', duration: 2 }],
+    rarity: 'uncommon', artColor: 0x22d3ee, icon: '🔱', cooldown: 1,
+  },
+  iris_ale_frostbite: {
+    id: 'iris_ale_frostbite', name: '冰封领域', cost: 1, type: 'attack', form: 'ALE', owner: 'iris', target: 'all-enemies',
+    description: '对全体敌人造成5点伤害\n施加2层易伤', damage: 5,
+    effects: [{ type: 'vulnerable', value: 50, target: 'enemy', duration: 2 }],
+    rarity: 'uncommon', artColor: 0x67e8f9, icon: '❄', cooldown: 2,
+  },
+  iris_ale_heal: {
+    id: 'iris_ale_heal', name: '冰息之环', cost: 1, type: 'skill', form: 'ALE', owner: 'iris', target: 'all-allies',
+    description: '全体队友恢复4点生命',
+    effects: [{ type: 'heal', value: 4 }],
+    rarity: 'uncommon', artColor: 0xa5f3fc, icon: '✚',
+  },
+
+  // Iris STAR form — ultimate support
+  iris_star_aura: {
+    id: 'iris_star_aura', name: '极光守护', cost: 1, type: 'defend', form: 'STAR', owner: 'iris', target: 'all-allies',
+    description: '全体队友获得10点格挡',
+    block: 10, rarity: 'rare', artColor: 0x67e8f9, icon: '✧',
+  },
+  iris_star_heal: {
+    id: 'iris_star_heal', name: '星霜圣疗', cost: 2, type: 'skill', form: 'STAR', owner: 'iris', target: 'all-allies',
+    description: '全体队友恢复10点生命',
+    effects: [{ type: 'heal', value: 10 }],
+    rarity: 'rare', artColor: 0xfde047, icon: '✚', cooldown: 1,
+  },
+  iris_star_blast: {
+    id: 'iris_star_blast', name: '星霜裁决', cost: 2, type: 'attack', form: 'STAR', owner: 'iris', target: 'enemy',
+    description: '造成18点伤害', damage: 18,
+    rarity: 'rare', artColor: 0xfde047, icon: '☄', cooldown: 1,
+  },
+
+  // ── New: Status effect cards ──
+  venom_strike: {
+    id: 'venom_strike', name: '毒液打击', cost: 1, type: 'attack', form: 'BSE', owner: 'ampere', target: 'enemy',
+    description: '造成4点伤害\n施加3层中毒(每回合3点)',
+    damage: 4, effects: [{ type: 'poison', value: 3, target: 'enemy', duration: 3 }],
+    rarity: 'uncommon', artColor: 0x22c55e, icon: '☠',
+  },
+  flame_bolt: {
+    id: 'flame_bolt', name: '烈焰弹', cost: 1, type: 'attack', form: 'BSE', owner: 'ampere', target: 'enemy',
+    description: '造成5点伤害\n施加3层灼烧(每回合3点)',
+    damage: 5, effects: [{ type: 'burn', value: 3, target: 'enemy', duration: 3 }],
+    rarity: 'uncommon', artColor: 0xf97316, icon: '🔥',
+  },
+  crushing_blow: {
+    id: 'crushing_blow', name: '碎裂击', cost: 2, type: 'attack', form: 'BSE', owner: 'ampere', target: 'enemy',
+    description: '造成8点伤害\n施加2层易伤(受伤+50%)',
+    damage: 8, effects: [{ type: 'vulnerable', value: 50, target: 'enemy', duration: 2 }],
+    rarity: 'uncommon', artColor: 0xf87171, icon: '💔',
+  },
+  enfeeble: {
+    id: 'enfeeble', name: '削弱', cost: 1, type: 'skill', form: 'BSE',
+    description: '施加2层虚弱(攻击-25%)\n获得3点格挡',
+    block: 3, effects: [{ type: 'weakness', value: 25, target: 'enemy', duration: 2 }],
+    rarity: 'uncommon', artColor: 0x60a5fa, icon: '💧',
+  },
+  drain_strike: {
+    id: 'drain_strike', name: '虹吸斩', cost: 2, type: 'attack', form: 'BSE', owner: 'ampere', target: 'enemy',
+    description: '造成10点伤害\n回复等量50%生命',
+    damage: 10, effects: [{ type: 'lifesteal', value: 50, target: 'self' }],
+    rarity: 'rare', artColor: 0xec4899, icon: '🩸', cooldown: 2,
+  },
+  double_strike: {
+    id: 'double_strike', name: '二连斩', cost: 1, type: 'attack', form: 'BSE', owner: 'ampere', target: 'enemy',
+    description: '造成2次4点伤害',
+    damage: 4, effects: [{ type: 'damage', value: 4, target: 'enemy' }],
+    rarity: 'uncommon', artColor: 0xfbbf24, icon: '⚡',
+  },
+  iris_frostbite: {
+    id: 'iris_frostbite', name: '霜噬', cost: 1, type: 'attack', form: 'BSE', owner: 'iris', target: 'enemy',
+    description: '造成5点伤害\n施加2层虚弱',
+    damage: 5, effects: [{ type: 'weakness', value: 25, target: 'enemy', duration: 2 }],
+    rarity: 'uncommon', artColor: 0x67e8f9, icon: '❄',
+  },
 };
 
 /**
@@ -240,6 +324,22 @@ export function createDeckForForm(form: BattleForm): CardData[] {
 }
 export function createCharacterDeck(owner: CharacterId, form: BattleForm = 'BSE'): CardData[] {
   if (owner === 'iris') {
+    if (form === 'ALE') {
+      return [
+        CARD_DATABASE.iris_ale_lance, CARD_DATABASE.iris_ale_lance,
+        CARD_DATABASE.iris_ale_frostbite,
+        CARD_DATABASE.iris_ale_heal, CARD_DATABASE.iris_ale_heal,
+        CARD_DATABASE.iris_barrier, CARD_DATABASE.iris_shard,
+      ];
+    }
+    if (form === 'STAR') {
+      return [
+        CARD_DATABASE.iris_star_blast, CARD_DATABASE.iris_star_blast,
+        CARD_DATABASE.iris_star_aura, CARD_DATABASE.iris_star_aura,
+        CARD_DATABASE.iris_star_heal,
+      ];
+    }
+    // BSE — base support
     return [
       CARD_DATABASE.iris_shard, CARD_DATABASE.iris_shard, CARD_DATABASE.iris_shard,
       CARD_DATABASE.iris_barrier, CARD_DATABASE.iris_barrier,
