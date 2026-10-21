@@ -10,6 +10,8 @@ import { ChapterReader } from './components/pages/ChapterReader';
 import { CharacterBook } from './components/pages/CharacterBook';
 import { WorldView } from './components/pages/WorldView';
 import { Timeline } from './components/pages/Timeline';
+import { OtherworldOverview } from './components/pages/OtherworldOverview';
+import { OtherworldReader } from './components/pages/OtherworldReader';
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
             <Route path="/characters" element={<CharacterBook />} />
             <Route path="/world" element={<WorldView />} />
             <Route path="/timeline" element={<Timeline />} />
+            <Route path="/otherworld" element={<OtherworldOverview />} />
+            <Route path="/otherworld/read/:chapterIndex" element={<OtherworldReader />} />
           </Routes>
         </BrowserRouter>
       </MotionConfig>

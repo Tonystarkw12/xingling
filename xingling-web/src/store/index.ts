@@ -6,8 +6,13 @@ interface ReadingState {
   currentChapter: number;
   readingProgress: { volume: number; chapter: number } | null;
   completedChapters: string[];
+  otherworldChapter: number;
+  otherworldProgress: number | null;
+  completedOtherworldChapters: number[];
   setProgress: (volume: number, chapter: number) => void;
   markComplete: (volume: number, chapter: number) => void;
+  setOtherworldProgress: (chapter: number) => void;
+  markOtherworldComplete: (chapter: number) => void;
   loadProgress: () => void;
 }
 
@@ -16,6 +21,9 @@ export const useStore = create<ReadingState>((set) => ({
   currentChapter: 0,
   readingProgress: null,
   completedChapters: [],
+  otherworldChapter: 0,
+  otherworldProgress: null,
+  completedOtherworldChapters: [],
 
   setProgress: (volume, chapter) => {
     set({ currentVolume: volume, currentChapter: chapter, readingProgress: { volume, chapter } });
@@ -40,12 +48,41 @@ export const useStore = create<ReadingState>((set) => ({
     });
   },
 
+  setOtherworldProgress: (chapter) => {
+    set({ otherworldChapter: chapter, otherworldProgress: chapter });
+    try {
+      localStorage.setItem('xingling-otherworld-progress', JSON.stringify(chapter));
+    } catch {
+      /* ignore */
+    }
+  },
+
+  markOtherworldComplete: (chapter) => {
+    set((state) => {
+      if (state.completedOtherworldChapters.includes(chapter)) return state;
+      const completed = [...state.completedOtherworldChapters, chapter];
+      try {
+        localStorage.setItem('xingling-otherworld-completed', JSON.stringify(completed));
+      } catch {
+        /* ignore */
+      }
+      return { completedOtherworldChapters: completed };
+    });
+  },
+
   loadProgress: () => {
     try {
       const progress = localStorage.getItem('xingling-progress');
       const completed = localStorage.getItem('xingling-completed');
+      const owProgress = localStorage.getItem('xingling-otherworld-progress');
+      const owCompleted = localStorage.getItem('xingling-otherworld-completed');
       if (progress) set({ readingProgress: JSON.parse(progress) });
       if (completed) set({ completedChapters: JSON.parse(completed) });
+      if (owProgress) {
+        const parsed = JSON.parse(owProgress);
+        set({ otherworldChapter: parsed, otherworldProgress: parsed });
+      }
+      if (owCompleted) set({ completedOtherworldChapters: JSON.parse(owCompleted) });
     } catch {
       /* ignore */
     }

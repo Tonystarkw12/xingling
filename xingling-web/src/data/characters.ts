@@ -1,5 +1,6 @@
 export interface Character {
   name: string;
+  isSideStory?: boolean;
   alias?: string;
   race: string;
   role: string;
@@ -99,6 +100,69 @@ export const characters: Character[] = [
     role: '安兹华德公司情报员',
     description: '负责制作假身份和情报支持。',
     volumes: [2],
+  },
+  // === 外传 · 境界彼方 角色 ===
+  {
+    name: "艾丝特",
+    alias: "Esther",
+    race: "安吉拉",
+    role: "外传主角 / 深空探索先驱 / 阿波罗号舰长",
+    description: "《星灵外传：境界彼方》女主角，黄金圣城耶路纳德尔群星教大主教之女。性格坚韧反叛，不甘于温室牢笼，考入卡罗拉多大学师从开普勒教授。驾驶阿波罗号独自穿越78万光年拉尼亚星云，在极度孤寂中历经意志与肉体的淬炼，终在星海尽头领悟自由与爱的真谛。",
+    abilities: "深空导航、天体力学计算、曲率航行控制",
+    volumes: [0],
+    isSideStory: true,
+    relationships: ["开普勒教授的学生与学术继承人", "与AI罗素相依为命", "耶路纳德尔大主教之女"],
+  },
+  {
+    name: "开普勒教授",
+    alias: "Professor Kepler",
+    race: "安吉拉",
+    role: "外传核心人物 / 天体物理学巨擘",
+    description: "卡罗拉多大学老教授，“境界彼方”隐秘星系理论提出者。星灵纪元1857年以色散与引力透镜模型论证了拉尼亚星云外隐秘星系的存在。痛失参与先遣队的亲生女儿，后将女儿留下的星芒项链赠予艾丝特，数十年如一日守望着星海彼端。",
+    abilities: "引力透镜建模、深空理论天文学",
+    volumes: [0],
+    isSideStory: true,
+    relationships: ["艾丝特的恩师", "先遣队先驱之父"],
+  },
+  {
+    name: "罗素",
+    alias: "Russell",
+    race: "AI",
+    role: "阿波罗号伴生高维量子AI",
+    description: "“阿波罗号”深空远征舰的伴生人工智能。底层逻辑为不惜一切代价护送船员抵达境界彼方。在艾丝特濒临精神崩溃与自绝的危难关头，超频并牺牲认知算力为艾丝特提供全息慰藉与生存希望，展现了超越机器的温柔羁绊。",
+    abilities: "量子退相干抗扰、高维算力调配、全息拟真构筑",
+    volumes: [0],
+    isSideStory: true,
+    relationships: ["艾丝特的守护者与旅途同行者"],
+  },
+  {
+    name: "霍普",
+    alias: "Hope",
+    race: "精灵",
+    role: "艾丝特的爱犬 / 忠诚伙伴",
+    description: "艾丝特深空航行中唯一的生物伴侣，一只雪白的小狗。在穿越拉尼亚星云频繁出入曲率泡的时空应力下衰老离世，是艾丝特与故乡拉提麦尔最后的现实纽带，其离去促成了艾丝特航程中最大的心理考验。",
+    volumes: [0],
+    isSideStory: true,
+    relationships: ["艾丝特的挚爱宠物"],
+  },
+  {
+    name: "罗曼·耶和华",
+    alias: "Roman Jehovah",
+    race: "人类",
+    role: "古代思想先驱 / 哲学家",
+    description: "星灵古代哲学家，其思想照亮了数个时代的星空探索者。“我们终将回归于群星，因为我们生而自由！”以及关于“愿爱成为穿过黑夜的最后指引”的箴言贯穿全剧，成为贯通正传与外传的精神丰碑。",
+    volumes: [0],
+    isSideStory: true,
+  },
+  {
+    name: "耶路纳德尔大主教",
+    alias: "Archbishop of Jerunader",
+    race: "安吉拉",
+    role: "群星教大主教 / 艾丝特之父",
+    description: "黄金圣城耶路纳德尔的守望者与大主教。深知深空探索的残酷与绝望，以一句决绝的气话掩盖对女儿深沉的爱与不舍。在黄金阶梯上教会艾丝特“终点并不重要，重要的是走过的旅途”。",
+    volumes: [0],
+    isSideStory: true,
+    relationships: ["艾丝特的父亲"],
   },
   {
     name: '玛蒂尔达',

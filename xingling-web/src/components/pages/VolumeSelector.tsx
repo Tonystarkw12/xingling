@@ -64,6 +64,35 @@ export function VolumeSelector() {
         </div>
       </div>
 
+      {/* Gaiden Banner */}
+      <div className="mb-8 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-cosmic-800/90 via-nebula-950/50 to-cosmic-800/90 border border-nebula-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg">
+        <div className="flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-xl bg-nebula-500/20 border border-nebula-500/30 flex items-center justify-center text-nebula-300 shrink-0">
+            <Sparkles className="w-5 h-5 text-nebula-400 animate-pulse" />
+          </div>
+          <div>
+            <div className="text-xs font-bold text-nebula-300 flex items-center gap-2">
+              <span>官方独立外传</span>
+              <span className="text-[10px] font-mono text-star-400 bg-star-500/10 px-2 py-0.5 rounded-full border border-star-500/20">
+                THE OTHER WORLD
+              </span>
+            </div>
+            <p className="text-sm font-semibold text-text-primary mt-0.5">
+              《境界彼方》— 78万光年深空先驱孤航史诗 · 全六章精修典藏版
+            </p>
+          </div>
+        </div>
+        <Link
+          to="/otherworld"
+          onClick={() => sfx.playClick()}
+          className="px-4 py-2 rounded-xl bg-gradient-to-r from-nebula-500 to-star-500 hover:from-nebula-400 hover:to-star-400 text-white text-xs font-bold hover:scale-105 active:scale-95 transition-all shrink-0 flex items-center gap-1.5 shadow-md shadow-nebula-500/20"
+        >
+          <span>进入外传</span>
+          <ChevronRight className="w-3.5 h-3.5" />
+        </Link>
+      </div>
+
+
       {/* Volume Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {volumes.map((volume, idx) => {

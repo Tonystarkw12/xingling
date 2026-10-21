@@ -7,6 +7,7 @@ import { sfx } from '../../utils/sfx';
 
 interface TimelineEvent {
   year: string;
+  isSideStory?: boolean;
   title: string;
   description: string;
   volume: number;
@@ -15,6 +16,43 @@ interface TimelineEvent {
 }
 
 const timelineData: TimelineEvent[] = [
+  // === 外传 · 境界彼方 事件 ===
+  {
+    year: "星灵纪元1857",
+    title: "“境界彼方”理论提出与先遣队失联",
+    description: "天体物理学泰斗开普勒教授发表革命性论文，推断拉尼亚星云外78万光年潜藏着隐秘星系，正式命名为“境界彼方（The Other World）”。五支满载紫晶的探索舰队先后驶入暗物质迷雾，因量子退相干力场全部失联，成为星海未解之谜。",
+    volume: 0,
+    icon: "star",
+    category: "discovery",
+    isSideStory: true,
+  },
+  {
+    year: "星灵纪元2286",
+    title: "艾丝特降生于黄金圣城",
+    description: "外传女主角艾丝特出生于耶路纳德尔贵族门庭，其父为群星教大主教。自幼在巴别塔黄金阶梯聆听父亲“终点并不重要，重要的是所走过的旅途”之教诲，对七十八万光年外的“境界彼方”产生炽热憧憬。",
+    volume: 0,
+    icon: "sparkles",
+    category: "personal",
+    isSideStory: true,
+  },
+  {
+    year: "星灵纪元2305",
+    title: "艾丝特立誓远征与求学卡罗拉多",
+    description: "面对战火纷飞的萨尔扎哈与父亲的严苛阻拦，艾丝特对着流星立下奔赴星海的誓言，决然离家。后考入卡罗拉多大学师从年迈的开普勒教授潜心研习天体力学，接过先遣队先驱留下的星芒项链与阿波罗号深空星舰操舵权。",
+    volume: 0,
+    icon: "flag",
+    category: "hope",
+    isSideStory: true,
+  },
+  {
+    year: "星灵纪元2308",
+    title: "阿波罗号深空孤航与抵达境界彼方",
+    description: "艾丝特与量子AI罗素驾驶阿波罗号穿越78万光年拉尼亚星云暗物质乱流。在历经霍普离世、神经衰弱濒死、罗素牺牲算力救赎后，阿波罗号终于抵达目标坐标。艾丝特在生命的最后领悟了“真正的境界彼方就在所走过的旅途之中”。",
+    volume: 0,
+    icon: "heart",
+    category: "hope",
+    isSideStory: true,
+  },
   // === 远古时代 ===
   {
     year: '远古时代',
@@ -737,6 +775,7 @@ export function Timeline() {
     { label: '战后时代', events: timelineData.filter((e) => e.year === '战后时代' || e.year === '星灵纪元1210' || e.year === '星灵纪元1575' || e.year === '星灵纪元1903' || e.year === '星灵纪元2000') },
     { label: '星灵纪元1210-1385', events: timelineData.filter((e) => e.year === '星灵纪元1210-1385') },
     { label: '星灵纪元1618', events: timelineData.filter((e) => e.year === '星灵纪元1618') },
+    { label: '星灵纪元1857-2308 · 官方外传 境界彼方', events: timelineData.filter((e) => e.volume === 0 || e.isSideStory) },
     { label: '星灵纪元2275 · 第一卷 自行始终', events: timelineData.filter((e) => e.volume === 1) },
     { label: '星灵纪元2285 · 第二卷 风暴突袭', events: timelineData.filter((e) => e.volume === 2) },
     { label: '星灵纪元2290 · 第三卷 靶向药物', events: timelineData.filter((e) => e.volume === 3) },
@@ -793,7 +832,7 @@ export function Timeline() {
       {/* Stats Summary */}
       <div className="mb-10 p-5 rounded-2xl bg-gradient-to-r from-cosmic-800/60 via-cosmic-700/40 to-cosmic-800/60 border border-cosmic-600/40 text-center backdrop-blur-md shadow-lg">
         <p className="text-text-secondary text-sm">
-          跨越 <span className="text-nebula-400 font-bold font-mono">16卷</span>，
+          跨越 <span className="text-nebula-400 font-bold font-mono">16卷正传 + 官方外传</span>，
           收录 <span className="text-aurora-400 font-bold font-mono">{timelineData.length}个</span>重大历史节点，
           时间跨度从 <span className="text-star-400 font-bold">远古时代</span> 贯穿至 <span className="text-star-400 font-bold font-mono">星灵纪元2301</span>
         </p>

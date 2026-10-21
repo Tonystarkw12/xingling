@@ -1,6 +1,6 @@
 import { m } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { BookOpen, Users, Globe, Clock, Sparkles, ExternalLink, Key } from 'lucide-react';
+import { BookOpen, Users, Globe, Clock, Sparkles, ExternalLink, Key, Compass, Radio } from 'lucide-react';
 import { SpotlightCard } from '../ui/SpotlightCard';
 import { DecryptedText } from '../ui/DecryptedText';
 import { ShinyText } from '../ui/ShinyText';
@@ -159,6 +159,75 @@ export function Home() {
             </span>
           </SpotlightCard>
         </Link>
+      </m.div>
+
+            {/* 官方外传 · 境界彼方 特别推荐 */}
+      <m.div
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.45, duration: 0.8 }}
+        className="max-w-4xl w-full mb-12 relative z-10"
+      >
+        <div className="relative p-6 md:p-8 rounded-3xl bg-gradient-to-r from-cosmic-800/90 via-cosmic-700/60 to-cosmic-800/90 border border-nebula-500/40 shadow-2xl backdrop-blur-xl overflow-hidden group hover:border-nebula-400/70 transition-all duration-300">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-nebula-500/15 via-star-500/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-nebula-500/20 text-nebula-300 border border-nebula-500/30 flex items-center gap-1.5 shadow-sm">
+                  <Sparkles className="w-3.5 h-3.5 text-nebula-400 animate-pulse" />
+                  官方先驱外传 · 精修典藏版
+                </span>
+                <span className="text-[11px] font-mono text-star-300 px-2.5 py-0.5 rounded-full bg-star-500/10 border border-star-500/20">
+                  THE OTHER WORLD
+                </span>
+              </div>
+
+              <div>
+                <h2 className="text-2xl md:text-3xl font-black text-white flex items-center gap-3">
+                  <span>境界彼方</span>
+                  <span className="text-xs md:text-sm font-normal text-text-secondary font-mono tracking-wider">
+                    780,000 LIGHT YEARS ODYSSEY
+                  </span>
+                </h2>
+                <p className="text-xs md:text-sm text-text-secondary leading-relaxed mt-1 max-w-2xl">
+                  开普勒教授在星灵纪元1857年推论出拉尼亚星云外78万光年的隐秘星系。五批探索先遣队失联后，黄金圣城叛逆少女艾丝特携量子AI罗素驾驶阿波罗号毅然启航，在绝望与深空中追寻爱与自由的终极答案。
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3 text-xs text-text-secondary font-mono pt-1">
+                <span className="flex items-center gap-1 text-nebula-300">
+                  <BookOpen className="w-3.5 h-3.5" /> 全 6 章全本
+                </span>
+                <span>·</span>
+                <span className="flex items-center gap-1 text-star-300">
+                  <Radio className="w-3.5 h-3.5" /> 1.5 万字精修
+                </span>
+                <span>·</span>
+                <span className="text-aurora-300">星灵纪元 1857-2308</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row md:flex-col gap-2.5 shrink-0 w-full md:w-auto">
+              <Link
+                to="/otherworld"
+                onClick={() => sfx.playClick()}
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-nebula-500 to-star-500 hover:from-nebula-400 hover:to-star-400 text-white font-semibold text-xs md:text-sm text-center shadow-lg shadow-nebula-500/30 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+              >
+                <Compass className="w-4 h-4" />
+                <span>进入外传全景</span>
+              </Link>
+              <Link
+                to="/otherworld/read/0"
+                onClick={() => sfx.playClick()}
+                className="px-5 py-2.5 rounded-xl bg-cosmic-700/60 hover:bg-cosmic-600/70 border border-cosmic-600/50 hover:border-nebula-400/40 text-text-primary text-xs text-center transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-1.5"
+              >
+                <span>直接开启第一章</span>
+                <span>→</span>
+              </Link>
+            </div>
+          </div>
+        </div>
       </m.div>
 
       {/* 宣传片 */}

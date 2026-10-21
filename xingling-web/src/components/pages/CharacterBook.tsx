@@ -18,11 +18,16 @@ const RACE_SPOTLIGHTS: Record<string, string> = {
 
 export function CharacterBook() {
   const [selectedRace, setSelectedRace] = useState<string | null>(null);
+  const [novelFilter, setNovelFilter] = useState<'all' | 'main' | 'otherworld'>('all');
   const [selectedChar, setSelectedChar] = useState<string | null>(null);
 
-  const filtered = selectedRace
-    ? characters.filter((c) => c.race === selectedRace)
-    : characters;
+  const filtered = characters
+    .filter((c) => {
+      if (novelFilter === 'main' && c.isSideStory) return false;
+      if (novelFilter === 'otherworld' && !c.isSideStory) return false;
+      if (selectedRace && c.race !== selectedRace) return false;
+      return true;
+    });
 
   const selected = characters.find((character) => character.name === selectedChar) ?? null;
 
@@ -61,6 +66,49 @@ export function CharacterBook() {
         </div>
       </div>
 
+            {/* Novel Source Switcher */}
+      <div className="flex items-center gap-2 mb-4 p-1 rounded-2xl bg-cosmic-800/60 border border-cosmic-600/40 w-fit">
+        <button
+          onClick={() => {
+            sfx.playClick();
+            setNovelFilter('all');
+          }}
+          className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+            novelFilter === 'all'
+              ? 'bg-nebula-500 text-white shadow-sm'
+              : 'text-text-secondary hover:text-text-primary'
+          }`}
+        >
+          全部角色 ({characters.length})
+        </button>
+        <button
+          onClick={() => {
+            sfx.playClick();
+            setNovelFilter('main');
+          }}
+          className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+            novelFilter === 'main'
+              ? 'bg-nebula-500 text-white shadow-sm'
+              : 'text-text-secondary hover:text-text-primary'
+          }`}
+        >
+          正传 (16卷)
+        </button>
+        <button
+          onClick={() => {
+            sfx.playClick();
+            setNovelFilter('otherworld');
+          }}
+          className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+            novelFilter === 'otherworld'
+              ? 'bg-gradient-to-r from-nebula-500 to-star-500 text-white shadow-sm'
+              : 'text-text-secondary hover:text-text-primary'
+          }`}
+        >
+          <span>外传 · 境界彼方</span>
+          <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-white/20">6</span>
+        </button>
+      </div>
       {/* Race Filter */}
       <div className="flex flex-wrap gap-2 mb-6">
         <button
@@ -136,7 +184,12 @@ export function CharacterBook() {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-1 mt-3 pt-3 border-t border-cosmic-700/40">
-                  {char.volumes.slice(0, 5).map((v) => (
+                  {char.isSideStory && (
+                    <span className="px-2 py-0.5 rounded-full bg-nebula-500/20 text-nebula-300 text-[11px] font-mono border border-nebula-500/30">
+                      外传 · 境界彼方
+                    </span>
+                  )}
+                  {char.volumes.filter((v) => v > 0).slice(0, 5).map((v) => (
                     <span
                       key={v}
                       className="px-2 py-0.5 rounded-full bg-cosmic-700/60 text-text-secondary text-[11px] font-mono border border-cosmic-600/30"

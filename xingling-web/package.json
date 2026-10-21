@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "parse": "tsx scripts/parse-novel.ts",
+    "parse": "tsx scripts/parse-novel.ts && tsx scripts/parse-otherworld.ts",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "parse:main": "tsx scripts/parse-novel.ts",
+    "parse:otherworld": "tsx scripts/parse-otherworld.ts"
   },
   "dependencies": {
     "framer-motion": "^12.38.0",
