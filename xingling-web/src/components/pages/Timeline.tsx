@@ -1,6 +1,9 @@
 import { m } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Sparkles, Flame, Skull, Shield, Heart, Star, Zap, Flag } from 'lucide-react';
+import { SpotlightCard } from '../ui/SpotlightCard';
+import { ShinyText } from '../ui/ShinyText';
+import { sfx } from '../../utils/sfx';
 
 interface TimelineEvent {
   year: string;
@@ -334,7 +337,7 @@ const timelineData: TimelineEvent[] = [
     title: '极寒之地——谢尔利奇',
     description: '凯奥斯一行前往卡达列夫阿德尔星寻找星之键"冰霜"。"露娜"号被极端暴风雪击落，迫降在零下十度的千年冻土。远方狙击炮台上，一位娇小少女已瞄准了这艘战舰。',
     volume: 4,
-    icon: 'snow',
+    icon: 'sparkles',
     category: 'discovery',
   },
   {
@@ -708,12 +711,12 @@ const timelineData: TimelineEvent[] = [
 ];
 
 const categoryConfig = {
-  war: { color: 'text-red-400', bg: 'bg-red-500', icon: Flame },
-  discovery: { color: 'text-nebula-400', bg: 'bg-nebula-500', icon: Sparkles },
-  personal: { color: 'text-star-400', bg: 'bg-star-500', icon: Heart },
-  political: { color: 'text-amber-400', bg: 'bg-amber-500', icon: Flag },
-  tragedy: { color: 'text-gray-400', bg: 'bg-gray-500', icon: Skull },
-  hope: { color: 'text-aurora-400', bg: 'bg-aurora-500', icon: Zap },
+  war: { color: 'text-red-400', bg: 'bg-red-500', spotlight: 'rgba(239, 68, 68, 0.22)', label: '战争', icon: Flame },
+  discovery: { color: 'text-nebula-400', bg: 'bg-nebula-500', spotlight: 'rgba(167, 139, 250, 0.22)', label: '发现', icon: Sparkles },
+  personal: { color: 'text-star-400', bg: 'bg-star-500', spotlight: 'rgba(96, 165, 250, 0.22)', label: '个人', icon: Heart },
+  political: { color: 'text-amber-400', bg: 'bg-amber-500', spotlight: 'rgba(245, 158, 11, 0.22)', label: '政治', icon: Flag },
+  tragedy: { color: 'text-gray-400', bg: 'bg-gray-500', spotlight: 'rgba(148, 163, 184, 0.22)', label: '悲剧', icon: Skull },
+  hope: { color: 'text-aurora-400', bg: 'bg-aurora-500', spotlight: 'rgba(52, 211, 153, 0.22)', label: '希望', icon: Zap },
 };
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -725,11 +728,9 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   zap: Zap,
   star: Star,
   shield: Shield,
-  snow: Sparkles,
 };
 
 export function Timeline() {
-  // Group events by era
   const eras = [
     { label: '远古时代', events: timelineData.filter((e) => e.year === '远古时代') },
     { label: '第一次圣皇战争（约1000年前）', events: timelineData.filter((e) => e.year === '约1000年前') },
@@ -758,38 +759,43 @@ export function Timeline() {
     <div className="min-h-screen px-4 py-8 max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
-        <Link to="/" className="p-2 rounded-lg bg-cosmic-700/50 hover:bg-cosmic-600/50 transition-colors">
-          <ArrowLeft className="w-5 h-5 text-text-primary" />
+        <Link
+          to="/"
+          onClick={() => sfx.playClick()}
+          className="p-2.5 rounded-xl bg-cosmic-700/50 hover:bg-cosmic-600/60 border border-cosmic-600/40 text-text-primary transition-all hover:scale-105 active:scale-95"
+          aria-label="返回首页"
+        >
+          <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-text-primary">时间线</h1>
-          <p className="text-text-secondary text-sm">星灵纪元编年史 — 从宇宙起源到旅途终点</p>
+          <h1 className="text-3xl font-bold text-text-primary flex items-center gap-2">
+            <ShinyText text="时间线" speed={6} />
+            <span className="text-xs font-mono font-normal text-amber-400 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
+              CHRONICLE
+            </span>
+          </h1>
+          <p className="text-text-secondary text-sm mt-0.5">
+            星灵纪元编年史 — 从宇宙起源到旅途终点
+          </p>
         </div>
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap gap-3 mb-8 p-3 rounded-xl bg-cosmic-700/30 border border-cosmic-600/30">
-        {Object.entries(categoryConfig).map(([key, { color, bg }]) => (
-          <div key={key} className="flex items-center gap-1.5 text-xs">
-            <div className={`w-2 h-2 rounded-full ${bg}`} />
-            <span className={color}>
-              {key === 'war' && '战争'}
-              {key === 'discovery' && '发现'}
-              {key === 'personal' && '个人'}
-              {key === 'political' && '政治'}
-              {key === 'tragedy' && '悲剧'}
-              {key === 'hope' && '希望'}
-            </span>
+      <div className="flex flex-wrap gap-2.5 mb-8 p-4 rounded-2xl bg-cosmic-800/40 border border-cosmic-600/40 backdrop-blur-sm">
+        {Object.entries(categoryConfig).map(([key, { color, bg, label }]) => (
+          <div key={key} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cosmic-700/40 border border-cosmic-600/30 text-xs">
+            <div className={`w-2.5 h-2.5 rounded-full ${bg} shadow-sm shadow-current`} />
+            <span className={`${color} font-medium`}>{label}</span>
           </div>
         ))}
       </div>
 
-      {/* Stats */}
-      <div className="mb-8 p-4 rounded-xl bg-cosmic-700/30 border border-cosmic-600/30 text-center">
+      {/* Stats Summary */}
+      <div className="mb-10 p-5 rounded-2xl bg-gradient-to-r from-cosmic-800/60 via-cosmic-700/40 to-cosmic-800/60 border border-cosmic-600/40 text-center backdrop-blur-md shadow-lg">
         <p className="text-text-secondary text-sm">
-          跨越 <span className="text-nebula-400 font-bold">16卷</span>，
-          收录 <span className="text-aurora-400 font-bold">{timelineData.length}个</span>重大事件，
-          时间跨度从 <span className="text-star-400 font-bold">远古时代</span> 到 <span className="text-star-400 font-bold">星灵纪元2301</span>
+          跨越 <span className="text-nebula-400 font-bold font-mono">16卷</span>，
+          收录 <span className="text-aurora-400 font-bold font-mono">{timelineData.length}个</span>重大历史节点，
+          时间跨度从 <span className="text-star-400 font-bold">远古时代</span> 贯穿至 <span className="text-star-400 font-bold font-mono">星灵纪元2301</span>
         </p>
       </div>
 
@@ -797,14 +803,16 @@ export function Timeline() {
       {eras.map((era) => (
         era.events.length > 0 && (
           <div key={era.label} className="mb-12">
-            <h2 className="text-xl font-bold text-text-accent mb-6 pb-2 border-b border-cosmic-600/30">
-              {era.label}
-              <span className="ml-2 text-sm text-text-secondary font-normal">({era.events.length}件)</span>
+            <h2 className="text-xl font-bold text-text-accent mb-6 pb-2 border-b border-cosmic-600/40 flex items-center justify-between">
+              <span>{era.label}</span>
+              <span className="text-xs text-text-secondary font-mono font-normal">
+                {era.events.length} 个事件
+              </span>
             </h2>
 
             <div className="relative">
-              {/* Vertical line */}
-              <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-nebula-500 via-star-500 to-aurora-500" />
+              {/* Vertical Glowing Line */}
+              <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-nebula-500 via-star-500 to-aurora-500 opacity-60 shadow-[0_0_8px_rgba(167,139,250,0.5)]" />
 
               <div className="space-y-6">
                 {era.events.map((event, idx) => {
@@ -814,30 +822,42 @@ export function Timeline() {
                   return (
                     <m.div
                       key={`${event.volume}-${event.year}-${event.title}`}
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: -15 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: idx * 0.08 }}
-                      className="flex gap-6 relative"
+                      transition={{ delay: idx * 0.04 }}
+                      className="flex gap-5 relative"
                     >
-                      {/* Dot */}
-                      <div className="flex-shrink-0 w-12 flex justify-center pt-3">
-                        <div className={`w-3 h-3 rounded-full ${config.bg} shadow-lg`} style={{ boxShadow: `0 0 12px currentColor` }} />
+                      {/* Node Dot */}
+                      <div className="flex-shrink-0 w-12 flex justify-center pt-4">
+                        <div
+                          className={`w-3.5 h-3.5 rounded-full ${config.bg} shadow-lg ring-4 ring-cosmic-900`}
+                          style={{ boxShadow: `0 0 12px currentColor` }}
+                        />
                       </div>
 
-                      {/* Content */}
-                      <div className="flex-1 p-5 rounded-xl bg-cosmic-700/30 border border-cosmic-600/30 hover:border-cosmic-500/50 transition-all">
-                        <div className="flex items-center gap-2 mb-2">
-                          <IconComponent className={`w-4 h-4 ${config.color}`} />
-                          <span className={`text-sm ${config.color} font-medium`}>
-                            {event.year}
-                          </span>
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-cosmic-600/50 text-text-secondary">
-                            第{event.volume}卷
-                          </span>
-                        </div>
-                        <h3 className="text-lg font-bold text-text-primary mb-2">{event.title}</h3>
-                        <p className="text-sm text-text-secondary leading-relaxed">{event.description}</p>
+                      {/* Event Card with Spotlight */}
+                      <div className="flex-1">
+                        <SpotlightCard
+                          spotlightColor={config.spotlight}
+                          className="p-5 border-cosmic-600/40 hover:border-cosmic-500/60"
+                        >
+                          <div className="flex items-center gap-2 mb-2">
+                            <IconComponent className={`w-4 h-4 ${config.color}`} />
+                            <span className={`text-sm ${config.color} font-medium font-mono`}>
+                              {event.year}
+                            </span>
+                            <span className="text-[11px] px-2 py-0.5 rounded-full bg-cosmic-700/60 text-text-secondary font-mono border border-cosmic-600/30">
+                              第{event.volume}卷
+                            </span>
+                          </div>
+                          <h3 className="text-lg font-bold text-text-primary mb-2">
+                            {event.title}
+                          </h3>
+                          <p className="text-sm text-text-secondary leading-relaxed">
+                            {event.description}
+                          </p>
+                        </SpotlightCard>
                       </div>
                     </m.div>
                   );

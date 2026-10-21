@@ -1,6 +1,9 @@
 import { LazyMotion, MotionConfig, domAnimation } from 'framer-motion';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { StarField } from './components/effects/StarField';
+import { AuroraBackground } from './components/effects/AuroraBackground';
+import { ClickSpark } from './components/ui/ClickSpark';
+import { AudioController } from './components/ui/AudioController';
 import { Home } from './components/pages/Home';
 import { VolumeSelector } from './components/pages/VolumeSelector';
 import { ChapterReader } from './components/pages/ChapterReader';
@@ -13,7 +16,10 @@ function App() {
     <LazyMotion features={domAnimation}>
       <MotionConfig reducedMotion="user">
         <BrowserRouter>
+          <AuroraBackground />
           <StarField />
+          <ClickSpark sparkColor="#a78bfa" sparkCount={9} sparkRadius={28} />
+          <AudioController />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/volumes" element={<VolumeSelector />} />

@@ -13,6 +13,10 @@ dist/
 .claude/
 .zread/
 .spec-workflow/
+.tgrep/
+.zvec-grep/
+.xerj-data/
+.hyperresearch/
 
 # === Editor / agent tool artifacts (never commit) ===
 .vscode/
@@ -33,6 +37,11 @@ members/
 rules/
 skills/
 teamai.yaml
+
+# === Tool output & local runtime state ===
+repomix-output.xml
+# Root-anchored: local service runtime state (admin.key / audit.jsonl / node.lock)
+/data/
 
 # >>> Comet managed project state >>>
 !/.comet/

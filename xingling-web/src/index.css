@@ -21,12 +21,6 @@
   --color-bilibili-300: #5ccde8;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 html {
   scroll-behavior: smooth;
 }
@@ -79,3 +73,305 @@ body {
 ::-webkit-scrollbar-track { background: #0a0e27; }
 ::-webkit-scrollbar-thumb { background: #3b3f8e; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #8b5cf6; }
+
+/* ===== Reader (ChapterReader) themes ===== */
+.reader-shell {
+  --r-text: #e2e8f0;
+  --r-text-soft: #ccd3e0;
+  --r-muted: #8a93a8;
+  --r-accent: #a78bfa;
+  --r-chrome: rgba(10, 14, 39, 0.88);
+  --r-panel: #10163a;
+  --r-border: rgba(80, 88, 160, 0.35);
+  --r-btn: rgba(26, 31, 78, 0.55);
+  --r-btn-hover: rgba(45, 51, 110, 0.7);
+  min-height: 100vh;
+}
+.reader-shell[data-theme='sepia'] {
+  --r-text: #3d332a;
+  --r-text-soft: #4a3f33;
+  --r-muted: #8a7a63;
+  --r-accent: #6d54c9;
+  --r-chrome: rgba(247, 240, 221, 0.9);
+  --r-panel: #f4ecd6;
+  --r-border: rgba(138, 122, 99, 0.35);
+  --r-btn: rgba(138, 122, 99, 0.14);
+  --r-btn-hover: rgba(138, 122, 99, 0.26);
+}
+.reader-shell[data-theme='ink'] {
+  --r-text: #c8cdd8;
+  --r-text-soft: #b8bdc9;
+  --r-muted: #6b7280;
+  --r-accent: #9d7dfa;
+  --r-chrome: rgba(5, 5, 8, 0.9);
+  --r-panel: #0a0a0e;
+  --r-border: rgba(80, 85, 100, 0.3);
+  --r-btn: rgba(28, 30, 40, 0.7);
+  --r-btn-hover: rgba(45, 48, 62, 0.85);
+}
+
+.reader-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  z-index: 60;
+  background: var(--r-accent);
+  transition: width 0.1s linear;
+}
+.reader-topbar { background: var(--r-chrome); border-bottom: 1px solid var(--r-border); }
+.reader-panel { background: var(--r-panel); border: 1px solid var(--r-border); }
+.reader-btn { background: var(--r-btn); color: var(--r-text); }
+.reader-btn:hover { background: var(--r-btn-hover); }
+.reader-btn-active { background: var(--r-accent); color: #fff; }
+.reader-toggle { background: var(--r-btn); position: relative; }
+.reader-toggle-on { background: var(--r-accent) !important; }
+.reader-text { color: var(--r-text); }
+.reader-muted { color: var(--r-muted); }
+.reader-accent { color: var(--r-accent); }
+.reader-iconbtn { color: var(--r-text); }
+.reader-iconbtn:hover { background: var(--r-btn-hover); }
+
+.reader-body { color: var(--r-text-soft); }
+.reader-body p {
+  text-align: justify;
+  margin-bottom: 1em;
+  letter-spacing: 0.02em;
+}
+.reader-shell[data-indent='true'] .reader-body p { text-indent: 2em; }
+.reader-shell[data-font='sans'] .reader-article {
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+}
+
+/* ===== Reading atmosphere effects ===== */
+/* Drifting nebula blobs behind the text (space dust / warm glow by theme) */
+.reader-shell::before,
+.reader-shell::after {
+  content: '';
+  position: fixed;
+  z-index: -5;
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.1;
+}
+.reader-shell::before {
+  width: 42vw;
+  height: 42vw;
+  left: -10vw;
+  top: 8vh;
+  background: radial-gradient(circle, #8b5cf6, transparent 70%);
+}
+.reader-shell::after {
+  width: 36vw;
+  height: 36vw;
+  right: -8vw;
+  bottom: 6vh;
+  background: radial-gradient(circle, #60a5fa, transparent 70%);
+}
+.reader-shell[data-theme='sepia']::before {
+  background: radial-gradient(circle, #d9a441, transparent 70%);
+  opacity: 0.12;
+}
+.reader-shell[data-theme='sepia']::after {
+  background: radial-gradient(circle, #b085d6, transparent 70%);
+  opacity: 0.1;
+}
+.reader-shell[data-theme='ink']::before,
+.reader-shell[data-theme='ink']::after {
+  opacity: 0.07;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .reader-shell::before { animation: blob-a 26s ease-in-out infinite alternate; }
+  .reader-shell::after { animation: blob-b 32s ease-in-out infinite alternate; }
+}
+@keyframes blob-a {
+  to { transform: translate(6vw, 8vh) scale(1.15); }
+}
+@keyframes blob-b {
+  to { transform: translate(-5vw, -7vh) scale(1.1); }
+}
+.reader-shell[data-effects='false']::before,
+.reader-shell[data-effects='false']::after {
+  display: none;
+}
+
+/* Paragraphs fade in as they enter the viewport */
+.reader-p {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+.reader-p-shown {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reader-p { opacity: 1; transform: none; transition: none; }
+}
+
+/* ✦ divider twinkles, staggered */
+@media (prefers-reduced-motion: no-preference) {
+  .reader-divider span { animation: divider-twinkle 2.8s ease-in-out infinite; }
+  .reader-divider span:nth-child(2) { animation-delay: 0.45s; }
+  .reader-divider span:nth-child(3) { animation-delay: 0.9s; }
+}
+@keyframes divider-twinkle {
+  0%, 100% { opacity: 0.35; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Progress bar comet head */
+.reader-progress::after {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  translate: 0 -50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--r-accent);
+  box-shadow: 0 0 10px 2px var(--r-accent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.reader-progress-lit::after { opacity: 1; }
+
+/* Milestone toast */
+.reader-toast-wrap {
+  position: fixed;
+  top: 4.25rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 55;
+  pointer-events: none;
+}
+.reader-toast {
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  background: var(--r-panel);
+  border: 1px solid var(--r-border);
+  color: var(--r-accent);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .reader-toast { animation: toast-life 1.8s ease forwards; }
+}
+@keyframes toast-life {
+  0% { opacity: 0; transform: translateY(-8px); }
+  15% { opacity: 1; transform: none; }
+  75% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* End-of-chapter card breathing glow */
+@media (prefers-reduced-motion: no-preference) {
+  .reader-endcard { animation: endcard-glow 3s ease-in-out infinite; }
+}
+@keyframes endcard-glow {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50% { box-shadow: 0 0 24px -4px var(--r-accent); }
+}
+
+/* Stardust text selection */
+.reader-shell ::selection {
+  background: color-mix(in srgb, var(--r-accent) 40%, transparent);
+}
+
+/* ✦ React Bits & Xingling Visual Enhancements ✦ */
+
+@keyframes shine {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.animate-shine {
+  animation: shine 4s linear infinite;
+}
+
+@keyframes star-movement-bottom {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-100%, 0%);
+    opacity: 0;
+  }
+}
+
+@keyframes star-movement-top {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(100%, 0%);
+    opacity: 0;
+  }
+}
+
+.animate-star-movement-bottom {
+  animation: star-movement-bottom linear infinite alternate;
+}
+
+.animate-star-movement-top {
+  animation: star-movement-top linear infinite alternate;
+}
+
+/* Audio visualizer equalizer bars */
+@keyframes equalizer-1 {
+  0%, 100% { height: 4px; }
+  50% { height: 14px; }
+}
+@keyframes equalizer-2 {
+  0%, 100% { height: 14px; }
+  50% { height: 6px; }
+}
+@keyframes equalizer-3 {
+  0%, 100% { height: 8px; }
+  50% { height: 16px; }
+}
+
+.animate-equalizer-1 {
+  animation: equalizer-1 0.75s ease-in-out infinite;
+}
+.animate-equalizer-2 {
+  animation: equalizer-2 0.6s ease-in-out infinite 0.15s;
+}
+.animate-equalizer-3 {
+  animation: equalizer-3 0.85s ease-in-out infinite 0.3s;
+}
+
+/* Aurora background organic floating */
+@keyframes aurora-blob-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, 30px) scale(1.1); }
+}
+@keyframes aurora-blob-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-30px, -40px) scale(1.15); }
+}
+@keyframes aurora-blob-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(25px, -20px) scale(1.05); }
+}
+
+.animate-aurora-blob-1 {
+  animation: aurora-blob-1 18s ease-in-out infinite;
+}
+.animate-aurora-blob-2 {
+  animation: aurora-blob-2 22s ease-in-out infinite;
+}
+.animate-aurora-blob-3 {
+  animation: aurora-blob-3 26s ease-in-out infinite;
+}
