@@ -43,6 +43,9 @@ repomix-output.xml
 # Root-anchored: local service runtime state (admin.key / audit.jsonl / node.lock)
 /data/
 
+# === Media masters (web-optimized copies live in xingling-web/public/) ===
+/xingling-web/xingling-promo.mp4
+
 # >>> Comet managed project state >>>
 !/.comet/
 /.comet/*
