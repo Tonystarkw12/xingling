@@ -57,6 +57,9 @@ export abstract class BaseChapterScene extends Phaser.Scene {
   private ffButton?: Phaser.GameObjects.Text;
   private skipIndicator?: Phaser.GameObjects.Text;
 
+  // Currently playing voice line (stopped when the next voice starts, on skip, or on shutdown)
+  private currentVoice?: Phaser.Sound.BaseSound;
+
   protected characters: Map<string, CharacterConfig> = new Map();
   protected activeCharacters: Map<string, CharacterPortrait> = new Map();
 
@@ -74,6 +77,8 @@ export abstract class BaseChapterScene extends Phaser.Scene {
     this.characters.clear();
     this.dialogueBox = undefined;
     this.choicePanel = undefined;
+    this.currentVoice = undefined;
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.stopVoice());
 
     this.createBackground();
     this.createCharacters();
@@ -306,6 +311,7 @@ export abstract class BaseChapterScene extends Phaser.Scene {
     if (this.isChoiceActive || !this.isDialoguePlaying) return;
 
     this.skipIndicator?.setVisible(true);
+    this.stopVoice();
 
     // Stop fast-forward if active
     if (this.isFastForward) this.stopFastForward();
@@ -371,8 +377,24 @@ export abstract class BaseChapterScene extends Phaser.Scene {
     if (this.dialogueBox) this.dialogueBox.showText(speakerName, text);
 
     // Play voice line if available
+    // A new voice line interrupts the previous one; text-only lines let it keep playing.
     if (voiceKey && this.cache.audio.exists(voiceKey)) {
-      this.sound.play(voiceKey, { volume: 0.8 });
+      this.stopVoice();
+      const voice = this.sound.add(voiceKey, { volume: 0.8 });
+      voice.once(Phaser.Sound.Events.COMPLETE, () => {
+        if (this.currentVoice === voice) this.currentVoice = undefined;
+        voice.destroy();
+      });
+      voice.play();
+      this.currentVoice = voice;
+    }
+  }
+
+  protected stopVoice(): void {
+    if (this.currentVoice) {
+      this.currentVoice.stop();
+      this.currentVoice.destroy();
+      this.currentVoice = undefined;
     }
   }
 
