@@ -6,6 +6,7 @@ import { DecryptedText } from '../ui/DecryptedText';
 import { ShinyText } from '../ui/ShinyText';
 import { BlurText } from '../ui/BlurText';
 import { StarBorder } from '../ui/StarBorder';
+import { PromoVideo } from '../ui/PromoVideo';
 import { sfx } from '../../utils/sfx';
 
 export function Home() {
@@ -158,6 +159,21 @@ export function Home() {
             </span>
           </SpotlightCard>
         </Link>
+      </m.div>
+
+      {/* 宣传片 */}
+      <m.div
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.8 }}
+        className="max-w-4xl w-full mb-14 relative z-10"
+      >
+        <PromoVideo
+          src="/videos/xingling-promo.mp4"
+          poster="/videos/xingling-promo-poster.webp"
+          title="星灵宣传片"
+          subtitle="THE HOLY EMPEROR WAR"
+        />
       </m.div>
 
       {/* Featured Callout Banner with StarBorder */}
